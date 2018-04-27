@@ -356,6 +356,22 @@ classdef FeaturesUnitTests < matlab.unittest.TestCase
             testCase.verifyLessThanOrEqual(diff(2), testCase.delta);
         end
         
+        % Commented because this function fails just in Matlab. It is not
+        % failing in python, neither in Java. It is failing when using the
+        % lls solver of tsa which uses the svd function of ArrayFire. It
+        % fails exactly at the point where svd is used.
+        %function testFriedrichCoefficients(testCase)
+        %    a = tsa.Array([[0, 1, 2, 3, 4, 5]', [0, 1, 2, 3, 4, 5]']);
+        %    b = tsa.Features.friedrichCoefficients(a, 4, 2);
+        %    expected = [[-0.0009912563255056738, -0.0027067768387496471, ...
+        %        -0.00015192681166809052, 0.10512571036815643, ...
+        %        0.89872437715530396]', [-0.0009912563255056738, ...
+        %        -0.0027067768387496471, -0.00015192681166809052, ...
+        %        0.10512571036815643, 0.89872437715530396]'];
+        %    c = b.getData();
+        %    testCase.verifyEqual(c, expected);
+        %end
+        
         function testHasDuplicates(testCase)
             a = tsa.Array([[5, 4, 3, 0, 0, 1]', [5, 4, 3, 0, 2, 1]']);
             b = tsa.Features.hasDuplicates(a);
@@ -592,10 +608,40 @@ classdef FeaturesUnitTests < matlab.unittest.TestCase
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
         end
         
+        function testPartialAutocorrelation(testCase)
+            numel = 3000;
+            step = 1 / (numel - 1);
+            input = 0:step:step * (numel - 1);
+            input = [input', input'];
+            a = tsa.Array(single(input));
+            lags = tsa.Array(int32(0:9)');
+            b = tsa.Features.partialAutocorrelation(a, lags);
+            expected = [[1.0, 0.9993331432342529, -0.0006701064994559, ...
+                -0.0006701068487018, -0.0008041285327636, ...
+                -0.0005360860959627, -0.0007371186511591, ...
+                -0.0004690756904893, -0.0008041299879551, ...
+                -0.0007371196406893]', [1.0, 0.9993331432342529, ...
+                -0.0006701064994559, -0.0006701068487018, -0.0008041285327636, ...
+                -0.0005360860959627, -0.0007371186511591, -0.0004690756904893, ...
+                -0.0008041299879551, -0.0007371196406893]'];
+            c = b.getData();
+            diff = abs(c - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta * 1e3);
+        end
+        
         function testPercentageOfReoccurringDatapointsToAllDatapoints(testCase)
             a = tsa.Array([[3, 0, 0, 4, 0, 0, 13]', [3, 0, 0, 4, 0, 0, 13]']);
             b = tsa.Features.percentageOfReoccurringDatapointsToAllDatapoints(a, false);
             expected = [0.25 0.25];
+            c = b.getData();
+            diff = abs(c - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        
+        function testPercentageOfReoccurringValuesToAllValues(testCase)
+            a = tsa.Array([[1, 1, 2, 3, 4, 4, 5, 6]', [1, 2, 2, 3, 4, 5, 6, 7]']);
+            b = tsa.Features.percentageOfReoccurringValuesToAllValues(a, false);
+            expected = [4/8 2/8];
             c = b.getData();
             diff = abs(c - expected);
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
@@ -611,10 +657,28 @@ classdef FeaturesUnitTests < matlab.unittest.TestCase
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
         end
         
+        function testRangeCount(testCase)
+            a = tsa.Array([[3, 0, 0, 4, 0, 0, 13]', [3, 0, 5, 4, 0, 0, 13]']);
+            b = tsa.Features.rangeCount(a, 2, 12);
+            expected = [2 3];
+            c = b.getData();
+            diff = abs(c - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        
         function testRatioBeyondRSigma(testCase)
             a = tsa.Array([[3, 0, 0, 4, 0, 0, 13]', [3, 0, 0, 4, 0, 0, 13]']);
             b = tsa.Features.ratioBeyondRSigma(a, 0.5);
             expected = [0.7142857142857143 0.7142857142857143];
+            c = b.getData();
+            diff = abs(c - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        
+        function testRatioValueNumberToTimeSeriesLength(testCase)
+            a = tsa.Array([[3, 0, 0, 4, 0, 0, 13]', [3, 5, 0, 4, 6, 0, 13]']);
+            b = tsa.Features.ratioValueNumberToTimeSeriesLength(a);
+            expected = [4/7 6/7];
             c = b.getData();
             diff = abs(c - expected);
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
@@ -633,6 +697,16 @@ classdef FeaturesUnitTests < matlab.unittest.TestCase
             a = tsa.Array([[3, 0, 0, 4, 0, 0, 13]', [3, 0, 0, 4, 0, 0, 13]']);
             b = tsa.Features.skewness(a);
             expected = [2.038404735373753 2.038404735373753];
+            c = b.getData();
+            diff = abs(c - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        
+        function testSpktWelchDensity(testCase)
+            a = tsa.Array([[0, 1, 1, 3, 4, 5, 6, 7, 8, 9]', ...
+                [0, 1, 1, 3, 4, 5, 6, 7, 8, 9]']);
+            b = tsa.Features.spktWelchDensity(a, 0);
+            expected = [3.3333334922790527 3.3333334922790527];
             c = b.getData();
             diff = abs(c - expected);
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
@@ -658,6 +732,24 @@ classdef FeaturesUnitTests < matlab.unittest.TestCase
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
         end
         
+        function testSumOfReoccurringValues(testCase)
+            a = tsa.Array([[4, 4, 6, 6, 7]', [4, 7, 7, 8, 8]']);
+            b = tsa.Features.sumOfReoccurringValues(a, false);
+            expected = [10 15];
+            c = b.getData();
+            diff = abs(c - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        
+        function testSumValues(testCase)
+            a = tsa.Array([[1, 2, 3, 4.1]', [-1.2, -2, -3, -4]']);
+            b = tsa.Features.sumValues(a);
+            expected = [10.1 -10.2];
+            c = b.getData();
+            diff = abs(c - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        
         function testSymmetryLooking(testCase)
             a = tsa.Array([[20, 20, 20, 18, 25, 19, 20, 20, 20, 20, 40, ...
                 30, 1, 50, 1, 1, 5, 1, 20, 20]', [20, 20, 20, 2, 19, 1, ...
@@ -668,12 +760,40 @@ classdef FeaturesUnitTests < matlab.unittest.TestCase
             testCase.verifyEqual(c, expected);
         end
         
+        function testTimeReversalAsymmetryStatistic(testCase)
+            a = tsa.Array([[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, ...
+                15, 16, 17, 18, 19, 20]', [20, 20, 20, 2, 19, 1, 20, 20, ...
+                20, 1, 15, 1, 30, 1, 1, 18, 4, 1, 20, 20]']);
+            b = tsa.Features.timeReversalAsymmetryStatistic(a, 2);
+            expected = [1052 -150.625];
+            c = b.getData();
+            testCase.verifyEqual(c, expected);
+        end
+        
         function testValueCount(testCase)
             a = tsa.Array([[20, 20, 20, 18, 25, 19, 20, 20, 20, 20, 40, ...
                 30, 1, 50, 1, 1, 5, 1, 20, 20]', [20, 20, 20, 2, 19, 1, ...
                 20, 20, 20, 1, 15, 1, 30, 1, 1, 18, 4, 1, 20, 20]']);
             b = tsa.Features.valueCount(a, 20);
             expected = uint32([9 8]);
+            c = b.getData();
+            testCase.verifyEqual(c, expected);
+        end
+        
+        function testVariance(testCase)
+            a = tsa.Array([[1, 1, -1, -1]', [1, 2, -2, -1]']);
+            b = tsa.Features.variance(a);
+            expected = [1 2.5];
+            c = b.getData();
+            testCase.verifyEqual(c, expected);
+        end
+        
+        function testVarianceLargerThanStandardDeviation(testCase)
+            a = tsa.Array([[20, 20, 20, 18, 25, 19, 20, 20, 20, 20, 40, ...
+                30, 1, 50, 1, 1, 5, 1, 20, 20]', [20, 20, 20, 2, 19, 1, ...
+                20, 20, 20, 1, 15, 1, 30, 1, 1, 18, 4, 1, 20, 20]']);
+            b = tsa.Features.varianceLargerThanStandardDeviation(a);
+            expected = [true true];
             c = b.getData();
             testCase.verifyEqual(c, expected);
         end

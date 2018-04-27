@@ -422,6 +422,37 @@ classdef Features < handle
             flom = tsa.Array(result);
         end
         
+        % Commented because this function fails just in Matlab. It is not
+        % failing in python, neither in Java. It is failing when using the
+        % lls solver of tsa which uses the svd function of ArrayFire. It
+        % fails exactly at the point where svd is used.
+        %function fc = friedrichCoefficients(array, m, r)
+        %    %% FRIEDRICHCOEFFICIENTS
+        %    % Coefficients of polynomial $h(x)$, which has been fitted
+        %    % to the deterministic dynamics of Langevin model:
+        %    %
+        %    %   $$\dot(x)(t) = h(x(t)) + R \mathcal(N)(0,1)$$
+        %    %
+        %    % as described by [1]. For short time series this method is
+        %    % highly dependent on the parameters.
+        %    %
+        %    % [1] Friedrich et al. (2000): Physics Letters A 271, p. 217-222
+        %    % Extracting model equations from experimental data.
+        %    %
+        %    % *array* is an instance of the TSA array class, which points
+        %    % to an array stored in the device side. Such array might
+        %    % contain one or multiple time series (one per column).
+        %    %
+        %    % *m* Order of polynom to fit for estimating fixed points of
+        %    % dynamics.
+        %    %
+        %    % *r* Number of quantiles to use for averaging.
+        %    result = libpointer('voidPtrPtr');
+        %    [~, result] = calllib('libtsac', 'friedrich_coefficients', ...
+        %        array.getReference(), m, r, result);
+        %    fc = tsa.Array(result);
+        %end
+        
         function hd = hasDuplicates(array)
             %% HASDUPLICATES
             % Calculates if the input time series contain duplicated
@@ -602,6 +633,19 @@ classdef Features < handle
             stdrrest = tsa.Array(stdrrestRef);
         end
         
+        function lm = localMaximals(array)
+            %% LOCALMAXIMALS
+            % Calculates all Local Maximals for the time series in array.
+            %
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            result = libpointer('voidPtrPtr');
+            [~, result] = calllib('libtsac', 'local_maximals', ...
+                array.getReference(), result);
+            lm = tsa.Array(result);
+        end
+        
         function lsam = longestStrikeAboveMean(array)
             %% LONGESTSTRIKEABOVEMEAN
             % Calculates the length of the longest consecutive subsequence
@@ -772,6 +816,25 @@ classdef Features < handle
             ncm = tsa.Array(result);
         end
         
+        function ncp = numberCwtPeaks(array, maxW)
+            %% NUMBERCWTPEAKS
+            % This feature calculator searches for different peaks. To do
+            % so, the time series is smoothed by a ricker wavelet and for
+            % widths ranging from 1 to max_w. This feature calculator
+            % returns the number of peaks that occur at enough width scales
+            % and with sufficiently high Signal-to-Noise-Ratio (SNR).
+            %
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            %
+            % *maxW* The maximum width to consider.
+            result = libpointer('voidPtrPtr');
+            [~, ~, result] = calllib('libtsac', 'number_peaks', ...
+                array.getReference(), maxW, result);
+            ncp = tsa.Array(result);
+        end
+        
         function np = numberPeaks(array, n)
             %% NUMBERPEAKS
             % Calculates the number of peaks of at least support $n$ in the
@@ -790,15 +853,58 @@ classdef Features < handle
             np = tsa.Array(result);
         end
         
+        function pa = partialAutocorrelation(array, lags)
+            %% PARTIALAUTOCORRELATION
+            % Calculates the value of the partial autocorrelation function
+            % at the given lag. The lag $k$ partial autocorrelation of
+            % a time series $\lbrace x_t, t = 1 \ldots T \rbrace$ equals
+            % the partial correlation of $x_t$ and \f$x_{t-k}\f$, adjusted
+            % for the intermediate variables $\lbrace x_{t-1}, \ldots, x_{t-k+1}
+            % \rbrace$ ([1]). Following [2], it can be defined as:
+            %
+            %   $$\alpha_k = \frac{ Cov(x_t, x_{t-k} | x_{t-1}, \ldots,
+            %       x_{t-k+1})}{\sqrt{ Var(x_t | x_{t-1}, \ldots, x_{t-k+1})
+            %       Var(x_{t-k} | x_{t-1}, \ldots, x_{t-k+1} )}}$$
+            %
+            % with (a) $x_t = f(x_{t-1}, \ldots, x_{t-k+1})$ and (b)
+            % $ x_{t-k} = f(x_{t-1}, \ldots, x_{t-k+1})$ being AR(k-1)
+            % models that can be fitted by OLS. Be aware that in (a), the
+            % regression is done on past values to predict $ x_t $ whereas
+            % in (b), future values are used to calculate the past value
+            % $x_{t-k}$. It is said in [1] that "for an AR(p), the partial
+            % autocorrelations $\alpha_k$ will be nonzero for $k<=p$ and
+            % zero for $k>p$."
+            % With this property, it is used to determine the lag of an
+            % AR-Process.
+            %
+            % [1] Box, G. E., Jenkins, G. M., Reinsel, G. C., & Ljung, G. M.
+            % (2015). Time series analysis: forecasting and control. John
+            % Wiley & Sons.
+            %  [2] https://onlinecourses.science.psu.edu/stat510/node/62
+            %
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            %
+            % *lags* is an instance of the TSA array class, which points to
+            % the lags to be calculated.
+            result = libpointer('voidPtrPtr');
+            [~, ~, result] = calllib('libtsac', 'partial_autocorrelation', ...
+                array.getReference(), lags.getReference(), result);
+            pa = tsa.Array(result);
+        end
+        
         function pordtad = percentageOfReoccurringDatapointsToAllDatapoints ...
                 (array, isSorted)
             %% PERCENTAGEOFREOCCURRINGDATAPOINTSTOALLDATAPOINTS
-            % Calculates the percentage of unique values, that are present in the time series more than once.
+            % Calculates the percentage of unique values, that are present
+            % in the time series more than once.
             % 
             % $$len(different values occurring more than once) /
             % len(different values)$$
             % 
-            % This means the percentage is normalized to the number of unique values, in contrast to the
+            % This means the percentage is normalized to the number of
+            % unique values, in contrast to the
             % percentageOfReoccurringValuesToAllValues.
             %
             % *array* is an instance of the TSA array class, which points
@@ -811,6 +917,31 @@ classdef Features < handle
                 'percentage_of_reoccurring_datapoints_to_all_datapoints', ...
                 array.getReference(), isSorted, result);
             pordtad = tsa.Array(result);
+        end
+        
+        function porvtav = percentageOfReoccurringValuesToAllValues ...
+                (array, isSorted)
+            %% PERCENTAGEOFREOCCURRINGVALUESTOALLVALUES
+            % Calculates the percentage of unique values, that are present
+            % in the time series more than once.
+            %
+            %      $$\frac{\textit{number of data points occurring more
+            %       than once}}{\textit{number of all data points})}$$
+            %
+            % This means the percentage is normalized to the number of
+            % unique values, in contrast to the
+            % percentageOfReoccurringDatapointsToAllDatapoints.
+            %
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            %
+            % *isSorted* Indicates if the input time series is sorted or not.
+            result = libpointer('voidPtrPtr');
+            [~, ~, result] = calllib('libtsac', ...
+                'percentage_of_reoccurring_values_to_all_values', ...
+                array.getReference(), isSorted, result);
+            porvtav = tsa.Array(result);
         end
         
         function q = quantile(array, ps, precision)
@@ -830,6 +961,23 @@ classdef Features < handle
             q = tsa.Array(result);
         end
         
+        function rc = rangeCount(array, min, max)
+            %% RANGECOUNT
+            % Counts observed values within the interval [min, max).
+            %
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            %
+            % *min* Value that sets the lower limit.
+            %
+            % *max* Value that sets the upper limit.
+            result = libpointer('voidPtrPtr');
+            [~, ~, ~, result] = calllib('libtsac', 'range_count', ...
+                array.getReference(), min, max, result);
+            rc = tsa.Array(result);
+        end
+        
         function rbrs = ratioBeyondRSigma(array, r)
             %% RATIOBEYONDRSIGMA
             % Calculates the ratio of values that are more than
@@ -844,6 +992,23 @@ classdef Features < handle
             [~, ~, result] = calllib('libtsac', 'ratio_beyond_r_sigma', ...
                 array.getReference(), r, result);
             rbrs = tsa.Array(result);
+        end
+        
+        function rvnttsl = ratioValueNumberToTimeSeriesLength(array)
+            %% RATIOVALUENUMBERTOTIMESERIESLENGTH
+            % Calculates a factor which is 1 if all values in the time
+            % series occur only once, and below one if this is not the case.
+            % In principle, it just returns:
+            %
+            %      $$\frac{\textit{number_unique_values}}{\textit{number_values}}$$
+            %
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            result = libpointer('voidPtrPtr');
+            [~, result] = calllib('libtsac', 'ratio_value_number_to_time_series_length', ...
+                array.getReference(), result);
+            rvnttsl = tsa.Array(result);
         end
         
         function se = sampleEntropy(array)
@@ -883,6 +1048,30 @@ classdef Features < handle
             sk = tsa.Array(result);
         end
         
+        function swd = spktWelchDensity(array, coeff)
+            %% SPKTWELCHDENSITY
+            % Estimates the cross power spectral density of the time series
+            % array at different frequencies. To do so, the time series is
+            % first shifted from the time domain to the frequency domain.
+            %
+            % Welch's method computes an estimate of the power spectral
+            % density by dividing the data into overlapping segments,
+            % computing a modified periodogram for each segment and
+            % averaging the periodograms.
+            % [1] P. Welch, "The use of the fast Fourier transform for the
+            % estimation of power spectra: A method based on time averaging
+            % over short, modified periodograms", IEEE Trans. Audio
+            % Electroacoust. vol. 15, pp. 70-73, 1967.
+            % [2] M.S. Bartlett, "Periodogram Analysis and Continuous
+            % Spectra", Biometrika, vol. 37, pp. 1-16, 1950.
+            % [3] Rabiner, Lawrence R., and B. Gold. "Theory and Application
+            % of Digital Signal Processing" Prentice-Hall, pp. 414-419, 1975.
+            result = libpointer('voidPtrPtr');
+            [~, ~, result] = calllib('libtsac', 'spkt_welch_density', ...
+                array.getReference(), coeff, result);
+            swd = tsa.Array(result);
+        end
+        
         function stdev = standarDeviation(array)
             %% STANDARDDEVIATION
             % Calculates the standard deviation of each time series within
@@ -913,6 +1102,35 @@ classdef Features < handle
             sord = tsa.Array(result);
         end
         
+        function sorv = sumOfReoccurringValues(array, isSorted)
+            %% SUMOFREOCCURINGVALUES
+            % Calculates the sum of all values, that are present in the
+            % time series more than once.
+            %
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            %
+            % *isSorted* Indicates if the input time series is sorted or not.
+            result = libpointer('voidPtrPtr');
+            [~, ~, result] = calllib('libtsac', 'sum_of_reoccurring_values', ...
+                array.getReference(), isSorted, result);
+            sorv = tsa.Array(result);
+        end
+        
+        function sv = sumValues(array)
+            %% SUMVALUES
+            % Calculates the sum over the time series array.
+            %
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            result = libpointer('voidPtrPtr');
+            [~, result] = calllib('libtsac', 'sum_values', ...
+                array.getReference(), result);
+            sv = tsa.Array(result);
+        end
+        
         function sl = symmetryLooking(array, r)
             %% SYMMETRYLOOKING
             % Calculates if the distribution of array%looks symmetric*.
@@ -931,6 +1149,36 @@ classdef Features < handle
             sl = tsa.Array(result);
         end
         
+        function tras = timeReversalAsymmetryStatistic(array, lag)
+            %% TIMEREVERSALASYMMETRYSTATISTIC
+            % This function calculates the value of:
+            %
+            %      $$\frac{1}{n-2lag} \sum_{i=0}^{n-2lag} x_{i + 2 \cdot
+            %       lag}^2 \cdot x_{i + lag} - x_{i + lag} \cdot  x_{i}^2$$
+            %
+            % which is
+            %
+            %       $$\mathbb{E}[L^2(X)^2 \cdot L(X) - L(X) \cdot X^2]$$
+            %
+            % where $\mathbb{E}$ is the mean and $L$ is the lag operator.
+            % It was proposed in [1] as a promising feature to extract from
+            % time series.
+            %
+            % [1] Fulcher, B.D., Jones, N.S. (2014). Highly comparative
+            % feature-based time-series classification. Knowledge and Data
+            % Engineering, IEEE Transactions on 26, 3026–3037.
+            % 
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            % 
+            % *lag* The lag to be computed.
+            result = libpointer('voidPtrPtr');
+            [~, ~, result] = calllib('libtsac', 'time_reversal_asymmetry_statistic', ...
+                array.getReference(), lag, result);
+            tras = tsa.Array(result);
+        end
+        
         function vc = valueCount(array, v)
             %% VALUECOUNT
             % Counts occurrences of value in the time series array.
@@ -944,6 +1192,35 @@ classdef Features < handle
             [~, ~, result] = calllib('libtsac', 'value_count', ...
                 array.getReference(), v, result);
             vc = tsa.Array(result);
+        end
+        
+        function v = variance(array)
+            %% VARIANCE
+            % Computes the variance for the time series array.
+            % 
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            result = libpointer('voidPtrPtr');
+            [~, result] = calllib('libtsac', 'variance', ...
+                array.getReference(), result);
+            v = tsa.Array(result);
+        end
+        
+        function v = varianceLargerThanStandardDeviation(array)
+            %% VARIANCELARGERTHANSTANDARDDEVIATION
+            % Calculates if the variance of array is greater than the
+            % standard deviation. In other words, if the variance of array
+            % is larger than 1.
+            % 
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            result = libpointer('voidPtrPtr');
+            [~, result] = calllib('libtsac', ...
+                'variance_larger_than_standard_deviation', ...
+                array.getReference(), result);
+            v = tsa.Array(result);
         end
     end
 end
