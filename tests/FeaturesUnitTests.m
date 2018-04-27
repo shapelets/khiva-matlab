@@ -399,9 +399,9 @@ classdef FeaturesUnitTests < matlab.unittest.TestCase
             testCase.verifyEqual(c(2), expected(2));
         end
         
-        function testIndexMaxQuantile(testCase)
+        function testIndexMassQuantile(testCase)
             a = tsa.Array([[5, 4, 3, 0, 0, 1]', [5, 4, 0, 0, 2, 1]']);
-            b = tsa.Features.indexMaxQuantile(a, 0.5);
+            b = tsa.Features.indexMassQuantile(a, 0.5);
             expected = [0.333333333 0.333333333];
             c = b.getData();
             diff = abs(c - expected);

@@ -495,9 +495,9 @@ classdef Features < handle
             hdm = tsa.Array(result);
         end
         
-        function imq = indexMaxQuantile(array, q)
-            %% INDEXMAXQUANTILE
-            % Calculates the index of the max quantile.
+        function imq = indexMassQuantile(array, q)
+            %% INDEXMASSQUANTILE
+            % Calculates the index of the mass quantile.
             %
             % *array* is an instance of the TSA array class, which points
             % to an array stored in the device side. Such array might
@@ -505,7 +505,7 @@ classdef Features < handle
             %
             % *q* The quantile.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'index_max_quantile', ...
+            [~, ~, result] = calllib('libtsac', 'index_mass_quantile', ...
                 array.getReference(), q, result);
             imq = tsa.Array(result);
         end

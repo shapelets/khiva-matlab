@@ -40,10 +40,48 @@ classdef NormalizationUnitTests < matlab.unittest.TestCase
         
         function testZNormInPlace(testCase)
            a = tsa.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
-           a = tsa.Normalization.zNormInPlace(a, 1e-8);
+           tsa.Normalization.zNormInPlace(a, 1e-8);
            expected = single([[-1.341640786499870, -0.447213595499958, ...
                0.447213595499958, 1.341640786499870]', [-1.341640786499870, ...
                -0.447213595499958, 0.447213595499958, 1.341640786499870]']);
+           b = a.getData();
+           diff = abs(b - expected);
+           testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        
+        function testMaxMinNorm(testCase)
+           a = tsa.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
+           b = tsa.Normalization.maxMinNorm(a, 2.0, 1.0, 1e-8);
+           expected = single([[1.0, 1.3333333333333, 1.66666667, 2.0]', ...
+               [1.0, 1.3333333333333, 1.66666667, 2.0]']);
+           c = b.getData();
+           diff = abs(c - expected);
+           testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        
+        function testMaxMinNormInPlace(testCase)
+           a = tsa.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
+           tsa.Normalization.maxMinNormInPlace(a, 2.0, 1.0, 1e-8);
+           expected = single([[1.0, 1.3333333333333, 1.66666667, 2.0]', ...
+               [1.0, 1.3333333333333, 1.66666667, 2.0]']);
+           b = a.getData();
+           diff = abs(b - expected);
+           testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        
+        function testDecimalScalingNorm(testCase)
+           a = tsa.Array(single([[0, 1, -2, 3]', [40, 50, 60, -70]']));
+           b = tsa.Normalization.decimalScalingNorm(a);
+           expected = single([[0.0, 0.1, -0.2, 0.3]', [0.4, 0.5, 0.6, -0.7]']);
+           c = b.getData();
+           diff = abs(c - expected);
+           testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        
+        function testDecimalScalingNormInPlace(testCase)
+           a = tsa.Array(single([[0, 1, -2, 3]', [40, 50, 60, -70]']));
+           tsa.Normalization.decimalScalingNormInPlace(a);
+           expected = single([[0.0, 0.1, -0.2, 0.3]', [0.4, 0.5, 0.6, -0.7]']);
            b = a.getData();
            diff = abs(b - expected);
            testCase.verifyLessThanOrEqual(diff, testCase.delta);
