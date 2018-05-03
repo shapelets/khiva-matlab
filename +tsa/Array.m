@@ -36,8 +36,8 @@ classdef Array < handle
                 ndims = ndims(2);
                 if not(isreal(data))
                     % Complex numbers
-                    complexData(1,:) = real(data);
-                    complexData(2,:) = imag(data);
+                    complexData(1,:,:,:,:) = real(data);
+                    complexData(2,:,:,:,:) = imag(data);
                     [~, ~, obj.dims, obj.arrReference, ~] = ...
                         calllib('libtsac', 'create_array', complexData, ...
                         ndims, obj.dims, ref, int32(obj.tsaDtype));
@@ -67,8 +67,8 @@ classdef Array < handle
                 [obj.arrReference, complexData] = calllib('libtsac', ...
                     'get_data', obj.arrReference, complexData);
                 complexData = reshape(complexData, [2, obj.dims(1:end)]);
-                complexData = complexData';
-                data = complex(complexData(:,1), complexData(:,2));
+                data = complex(complexData(1, :), complexData(2, :));
+                data = reshape(data, obj.getDims());
             else
                 data = zeros(obj.getDims(), clazz);
                 [obj.arrReference, data] = calllib('libtsac', ...

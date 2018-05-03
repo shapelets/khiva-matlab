@@ -706,7 +706,7 @@ classdef FeaturesUnitTests < matlab.unittest.TestCase
             a = tsa.Array([[0, 1, 1, 3, 4, 5, 6, 7, 8, 9]', ...
                 [0, 1, 1, 3, 4, 5, 6, 7, 8, 9]']);
             b = tsa.Features.spktWelchDensity(a, 0);
-            expected = [3.3333334922790527 3.3333334922790527];
+            expected = [1.6666667461395264 1.6666667461395264];
             c = b.getData();
             diff = abs(c - expected);
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
