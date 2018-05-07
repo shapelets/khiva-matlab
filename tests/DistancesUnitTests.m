@@ -46,6 +46,14 @@ classdef DistancesUnitTests < matlab.unittest.TestCase
             diff = abs(reshape(c,1,[]) - expected);
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
         end
+        function testDtw(testCase)
+            a = tsa.Array([[1, 1, 1, 1, 1]', [2, 2, 2, 2, 2]', [3, 3, 3, 3, 3]', [4, 4, 4, 4, 4]', [5, 5, 5, 5, 5]']);
+            b = tsa.Distances.dtw(a);
+            expected = [0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 10, 5, 0, 0, 0, 15, 10, 5, 0, 0, 20, 15, 10, 5, 0];
+            c = b.getData();
+            diff = abs(reshape(c,1,[]) - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
     end
 end
         

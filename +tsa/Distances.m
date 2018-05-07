@@ -36,5 +36,17 @@ classdef Distances < handle
                 array.getReference(), result);
             se = tsa.Array(result);
         end
+        function d = dtw(array)
+            %% DTW
+            % Calculates the Dynamic Time Warping Distance.
+            %
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            result = libpointer('voidPtrPtr');
+            [~, result] = calllib('libtsac', 'dtw', ...
+                array.getReference(), result);
+            d = tsa.Array(result);
+        end
     end
 end
