@@ -31,6 +31,7 @@ classdef Library < handle
                         'addheader','tsa_c/normalization.h', ...
                         'addheader','tsa_c/polynomial.h', ...
                         'addheader','tsa_c/regression.h', ...
+                        'addheader','tsa_c/regularization.h', ...
                         'addheader','tsa_c/statistics.h', ...
                         'includepath','/usr/local/include','alias','libtsac');
         end
@@ -99,6 +100,14 @@ classdef Library < handle
             % *backend* should be an instance of the Backend enumeration
             % class.
             calllib('libtsac','set_backend',int32(backend))
+        end
+        
+        function v = version()
+            %% VERSION
+            % Returns a string with the current version of the library.
+            v = {blanks(40)};
+            v = calllib('libtsac','version',v);
+            v = cell2mat(v);
         end
     end
 end

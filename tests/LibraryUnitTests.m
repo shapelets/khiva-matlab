@@ -94,5 +94,10 @@ classdef LibraryUnitTests < matlab.unittest.TestCase
             testCase.lib.setBackend(prevBackend);
             testCase.lib.setDevice(prevDevice);
         end
+        
+        function version(testCase)
+            v = testCase.lib.version();
+            testCase.verifyEqual(v, '0.0.1');
+        end
     end
 end
