@@ -24,9 +24,48 @@ classdef Distances < handle
             e = tsa.Array(result);
         end
         
+        function d = dtw(array)
+            %% DTW
+            % Calculates the Dynamic Time Warping Distance.
+            %
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            result = libpointer('voidPtrPtr');
+            [~, result] = calllib('libtsac', 'dtw', ...
+                array.getReference(), result);
+            d = tsa.Array(result);
+        end
+        
+        function h = hamming(array)
+            %% HAMMING
+            % Calculates Hamming distances between time series.
+            %
+            % *array* Expects an input array whose dimension zero is 
+            % the length of the time series (all the same) and dimension 
+            % one indicates the number of time series.
+            result = libpointer('voidPtrPtr');
+            [~, result] = calllib('libtsac', 'hamming', ...
+                array.getReference(), result);
+            h = tsa.Array(result);
+        end
+        
+        function m = manhattan(array)
+            %% MANHATTAN
+            % Calculates Manhattan distances between time series.
+            %
+            % *array* Expects an input array whose dimension zero is 
+            % the length of the time series (all the same) and dimension 
+            % one indicates the number of time series.
+            result = libpointer('voidPtrPtr');
+            [~, result] = calllib('libtsac', 'manhattan', ...
+                array.getReference(), result);
+            m = tsa.Array(result);
+        end
+        
         function se = squaredEuclidean(array)
             %% SQUAREDEUCLIDEAN
-            % Calculates non squared version of the euclidean distance.
+            % Calculates the non squared version of the euclidean distance.
             %
             % *array* is an instance of the TSA array class, which points
             % to an array stored in the device side. Such array might

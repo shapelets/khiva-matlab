@@ -11,38 +11,30 @@ classdef Normalization < handle
     % -------------------------------------------------------------------
     
     methods(Static)
-        function zn = zNorm(array, epsilon)
-            %% ZNORM
-            % Calculates a new set of timeseries with zero mean and
-            % standard deviation one.
+        function dsn = decimalScalingNorm(array)
+            %% DECIMALSCALINGNORM
+            % Normalizes the given time series according to its maximum
+            % value and adjusts each value within the range (-1, 1).
             %
             % *array* is an instance of the TSA array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
-            %
-            % *epsilon* Minimum standard deviation to consider. It acts as
-            % a gatekeeper for those time series that may be constant or
-            % near constant.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'znorm', ...
-                array.getReference(), epsilon, result);
-            zn = tsa.Array(result);
+            [~, result] = calllib('libtsac', ...
+                'decimal_scaling_norm', array.getReference(), result);
+            dsn = tsa.Array(result);
         end
         
-        function zNormInPlace(array, epsilon)
-            %% ZNORMINPLACE
-            % Adjusts the time series in the given input and performs
-            % z-norm inplace (without allocating further memory).
+        function decimalScalingNormInPlace(array)
+            %% DECIMALSCALINGNORMINPLACE
+            % Same as decimalScalingNorm, but it performs the operation
+            % in place, without allocating further memory.
             %
             % *array* is an instance of the TSA array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
-            %
-            % *epsilon* Minimum standard deviation to consider. It acts as
-            % a gatekeeper for those time series that may be constant or
-            % near constant.
-            calllib('libtsac', 'znorm_in_place', ...
-                array.getReference(), epsilon);
+            calllib('libtsac', 'decimal_scaling_norm_in_place', ...
+                array.getReference());
         end
         
         function mmn = maxMinNorm(array, high, low, epsilon)
@@ -88,30 +80,70 @@ classdef Normalization < handle
                 high, low, epsilon);
         end
         
-        function dsn = decimalScalingNorm(array)
-            %% DECIMALSCALINGNORM
-            % Normalizes the given time series according to its maximum
-            % value and adjusts each value within the range (-1, 1).
+        function dsn = meanNorm(array)
+            %% MEANNORM
+            % Normalizes the given time series according to its 
+            % maximum-minimum value and its mean. It follows the following
+            % formulae:
+            %
+            %   $$\acute{x} = \frac{x - mean(x)}{max(x) - min(x)}.$$
             %
             % *array* is an instance of the TSA array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
             [~, result] = calllib('libtsac', ...
-                'decimal_scaling_norm', array.getReference(), result);
+                'mean_norm', array.getReference(), result);
             dsn = tsa.Array(result);
         end
         
-        function decimalScalingNormInPlace(array)
-            %% DECIMALSCALINGNORMINPLACE
-            % Same as decimalScalingNorm, but it performs the operation
-            % in place, without allocating further memory.
+        function meanNormInPlace(array)
+            %% MEANNORMINPLACE
+            % Normalizes the given time series according to its 
+            % maximum-minimum value and its mean. It follows the following
+            % formulae:
+            %
+            %   $$\acute{x} = \frac{x - mean(x)}{max(x) - min(x)}.$$
             %
             % *array* is an instance of the TSA array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
-            calllib('libtsac', 'decimal_scaling_norm_in_place', ...
+            calllib('libtsac', 'mean_norm_in_place', ...
                 array.getReference());
+        end
+        
+        function zn = zNorm(array, epsilon)
+            %% ZNORM
+            % Calculates a new set of time series with zero mean and
+            % standard deviation one.
+            %
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            %
+            % *epsilon* Minimum standard deviation to consider. It acts as
+            % a gatekeeper for those time series that may be constant or
+            % near constant.
+            result = libpointer('voidPtrPtr');
+            [~, ~, result] = calllib('libtsac', 'znorm', ...
+                array.getReference(), epsilon, result);
+            zn = tsa.Array(result);
+        end
+        
+        function zNormInPlace(array, epsilon)
+            %% ZNORMINPLACE
+            % Adjusts the time series in the given input and performs
+            % z-norm inplace (without allocating further memory).
+            %
+            % *array* is an instance of the TSA array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            %
+            % *epsilon* Minimum standard deviation to consider. It acts as
+            % a gatekeeper for those time series that may be constant or
+            % near constant.
+            calllib('libtsac', 'znorm_in_place', ...
+                array.getReference(), epsilon);
         end
     end
 end
