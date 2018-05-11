@@ -149,8 +149,8 @@ classdef ArrayUnitTests < matlab.unittest.TestCase
         
         function testCreateFromReference(testCase)
             a = tsa.Array(single([1 2 3 4; 5 6 7 8]'));
-            b = tsa.Array(a.getReference());
             c = a.getData();
+            b = tsa.Array(a.getReference());
             d = b.getData();
             testCase.verifyEqual(c, d);
         end

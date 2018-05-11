@@ -32,7 +32,7 @@ classdef MatrixUnitTests < matlab.unittest.TestCase
            b = tsa.Array(single([9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 9]'));
            [profile, index] = tsa.Matrix.stomp(a, b, 3);
            [~, ~, subsequenceIndices] = tsa.Matrix.findBestNDiscords(profile, index, 2);
-           expectedIndex = uint32([0 9]');
+           expectedIndex = uint32([9 0]');
            indexHost = subsequenceIndices.getData();
            testCase.verifyEqual(indexHost, expectedIndex);
         end

@@ -29,19 +29,28 @@ classdef DistancesUnitTests < matlab.unittest.TestCase
     
     %% Test Method Block
     methods (Test)
-        function testEuclidean(testCase)
-            a = tsa.Array([[0, 1, 2, 3]',[ 4, 5, 6, 7]', [8, 9, 10, 11]']);
-            b = tsa.Distances.euclidean(a);
-            expected = [0, 0, 0, 8, 0, 0, 16, 8, 0];
+        function testDtw(testCase)
+            a = tsa.Array([[1, 1, 1, 1, 1]', [2, 2, 2, 2, 2]', [3, 3, 3, 3, 3]', [4, 4, 4, 4, 4]', [5, 5, 5, 5, 5]']);
+            b = tsa.Distances.dtw(a);
+            expected = [0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 10, 5, 0, 0, 0, 15, 10, 5, 0, 0, 20, 15, 10, 5, 0];
             c = b.getData();
             diff = abs(reshape(c,1,[]) - expected);
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
         end
         
-        function testDtw(testCase)
+        function testDtw2(testCase)
             a = tsa.Array([[1, 1, 1, 1, 1]', [2, 2, 2, 2, 2]', [3, 3, 3, 3, 3]', [4, 4, 4, 4, 4]', [5, 5, 5, 5, 5]']);
             b = tsa.Distances.dtw(a);
             expected = [0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 10, 5, 0, 0, 0, 15, 10, 5, 0, 0, 20, 15, 10, 5, 0];
+            c = b.getData();
+            diff = abs(reshape(c,1,[]) - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        
+        function testEuclidean(testCase)
+            a = tsa.Array([[0, 1, 2, 3]',[ 4, 5, 6, 7]', [8, 9, 10, 11]']);
+            b = tsa.Distances.euclidean(a);
+            expected = [0, 0, 0, 8, 0, 0, 16, 8, 0];
             c = b.getData();
             diff = abs(reshape(c,1,[]) - expected);
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
@@ -69,14 +78,6 @@ classdef DistancesUnitTests < matlab.unittest.TestCase
             a = tsa.Array([[0, 1, 2, 3]',[ 4, 5, 6, 7]', [8, 9, 10, 11]']);
             b = tsa.Distances.squaredEuclidean(a);
             expected = [0, 0, 0, 64, 0, 0, 256, 64, 0];
-            c = b.getData();
-            diff = abs(reshape(c,1,[]) - expected);
-            testCase.verifyLessThanOrEqual(diff, testCase.delta);
-        end
-        function testDtw(testCase)
-            a = tsa.Array([[1, 1, 1, 1, 1]', [2, 2, 2, 2, 2]', [3, 3, 3, 3, 3]', [4, 4, 4, 4, 4]', [5, 5, 5, 5, 5]']);
-            b = tsa.Distances.dtw(a);
-            expected = [0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 10, 5, 0, 0, 0, 15, 10, 5, 0, 0, 20, 15, 10, 5, 0];
             c = b.getData();
             diff = abs(reshape(c,1,[]) - expected);
             testCase.verifyLessThanOrEqual(diff, testCase.delta);

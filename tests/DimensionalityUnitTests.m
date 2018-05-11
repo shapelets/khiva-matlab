@@ -74,8 +74,8 @@ classdef DimensionalityUnitTests < matlab.unittest.TestCase
                7.0, 8.0, 9.0]', [0.0, 0.1, -0.1, 5.0, 6.0, 7.0, 8.1, ...
                9.0, 9.0, 9.0]']));
            b = tsa.Dimensionality.pip(a, 6);
-           expected = single([[0.0, 2.0, 4.0, 5.0, 6.0, 9.0]', ...
-               [0.0, -0.1, 6.0, 7.0, 8.1, 9.0]']);
+           expected = single([[0.0, 2.0, 3.0, 6.0, 7.0, 9.0]', ...
+               [0.0, -0.1, 5.0, 8.1, 9.0, 9.0]']);
            c = b.getData();
            diff = abs(c - expected);
            testCase.verifyLessThanOrEqual(diff, testCase.delta);

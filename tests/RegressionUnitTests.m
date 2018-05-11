@@ -39,10 +39,10 @@ classdef RegressionUnitTests < matlab.unittest.TestCase
             [slope, intercept, rvalue, pvalue, stderrest] = ... 
                 tsa.Regression.linear(a, b);
             slope = slope.getData();
-            intercept = intercept.getData()
-            rvalue = rvalue.getData()
-            pvalue = pvalue.getData()
-            stderrest = stderrest.getData()
+            intercept = intercept.getData();
+            rvalue = rvalue.getData();
+            pvalue = pvalue.getData();
+            stderrest = stderrest.getData();
             
             testCase.verifyLessThanOrEqual(slope(1) - 0.344864266, testCase.delta);
             testCase.verifyLessThanOrEqual(intercept(1) - 0.268578232, testCase.delta);
@@ -65,10 +65,10 @@ classdef RegressionUnitTests < matlab.unittest.TestCase
             [slope, intercept, rvalue, pvalue, stderrest] = ... 
                 tsa.Regression.linear(a, b);
             slope = slope.getData();
-            intercept = intercept.getData()
-            rvalue = rvalue.getData()
-            pvalue = pvalue.getData()
-            stderrest = stderrest.getData()
+            intercept = intercept.getData();
+            rvalue = rvalue.getData();
+            pvalue = pvalue.getData();
+            stderrest = stderrest.getData();
             
             testCase.verifyLessThanOrEqual(slope(1) - 0.344864266, ... 
                 testCase.delta);
