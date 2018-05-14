@@ -1,5 +1,4 @@
 # TSA-MATLAB
-
 This is the TSA binding for connecting the MATLAB programming language and the TSA library.
 
 ## License
@@ -12,12 +11,10 @@ This MATLAB package called 'tsa' provides all the functionalities of the TSA lib
 * Version:
 0.0.1
 
-
 ## How do I get set up?
 * Just copy the *+tsa* folder to your project.
 
 ## Executing the tests:
-
 1. Change the MATLAB working directory to the *tests* directory.
 2. Execute the following line for running the tests:
 
