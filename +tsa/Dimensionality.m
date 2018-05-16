@@ -145,5 +145,49 @@ classdef Dimensionality < handle
                 array.getReference(), numberIPs, result);
             p = tsa.Array(result);
         end
+        
+        function pbu = plaBottomUp(array, maxError)
+            %% PLASBOTTOMUP
+            % Applies the Piecewise Linear Approximation (PLA BottomUP) ...
+            % to the time series.
+            %
+            % [1] Zhu Y, Wu D, Li Sh (2007). A Piecewise Linear ... 
+            % Representation Method of Time Series Based on Feature Points.
+            % Knowledge-Based Intelligent Information and Engineering ... 
+            % Systems 4693:1066-1072.
+            %
+            % *array* Expects a tsa array containing the set of points to ...
+            % be reduced. The first component of the points in the first ...
+            % column and the second component of the points in the second ...
+            % column.
+            %
+            % *maxError* The maximum approximation error allowed.
+            result = libpointer('voidPtrPtr');
+            [~, ~, result] = calllib('libtsac', 'pla_bottom_up', ...
+                array.getReference(), maxError, result);
+            pbu = tsa.Array(result);
+        end
+        
+        function psw = plaSlidingWindow(array, maxError)
+            %% PLASLIDINGWINDOW
+            % Applies the Piecewise Linear Approximation ...
+            % (PLA Sliding Window) to the time series.
+            %
+            % [1] Zhu Y, Wu D, Li Sh (2007). A Piecewise Linear ... 
+            % Representation Method of Time Series Based on Feature Points.
+            % Knowledge-Based Intelligent Information and Engineering ...
+            % Systems 4693:1066-1072.
+            %
+            % *array* Expects a tsa array containing the set of points to ...
+            % be reduced. The first component of the points in the first ...
+            % column and the second component of the points in the second ...
+            % column.
+            %
+            % *maxError* The maximum approximation error allowed.
+            result = libpointer('voidPtrPtr');
+            [~, ~, result] = calllib('libtsac', 'pla_sliding_window', ...
+                array.getReference(), maxError, result);
+            psw = tsa.Array(result);
+        end
     end
 end

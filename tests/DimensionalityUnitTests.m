@@ -80,5 +80,28 @@ classdef DimensionalityUnitTests < matlab.unittest.TestCase
            diff = abs(c - expected);
            testCase.verifyLessThanOrEqual(diff, testCase.delta);
         end
+        
+        function testPLABottomUp(testCase)
+            a = tsa.Array(single([[0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, ...
+                8.0, 9.0]', [0.0, 0.1, -0.1, 5.0, 6.0, 7.0, 8.1, 9.0, ...
+                9.0, 9.0]']));
+            b = tsa.Dimensionality.plaBottomUp(a, 1);
+            expected = single([[0, 1, 2, 3, 4, 7, 8, 9]', ... 
+                [0, 0.1, -0.1, 5, 6, 9, 9, 9]']);
+            c = b.getData();
+            diff = abs(c - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        
+        function testPLASlidingWindow(testCase)
+            a = tsa.Array(single([[0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, ...
+                8.0, 9.0]', [0.0, 0.1, -0.1, 5.0, 6.0, 7.0, 8.1, 9.0, ...
+                9.0, 9.0]']));
+            b = tsa.Dimensionality.plaSlidingWindow(a, 1);
+            expected = single([[0, 2, 3, 7, 8, 9]', [0, -0.1, 5, 9, 9, 9]']);
+            c = b.getData();
+            diff = abs(c - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
     end
 end
