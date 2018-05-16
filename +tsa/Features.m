@@ -1072,7 +1072,7 @@ classdef Features < handle
             swd = tsa.Array(result);
         end
         
-        function stdev = standarDeviation(array)
+        function stdev = standardDeviation(array)
             %% STANDARDDEVIATION
             % Calculates the standard deviation of each time series within
             % array.

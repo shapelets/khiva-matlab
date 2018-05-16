@@ -716,7 +716,7 @@ classdef FeaturesUnitTests < matlab.unittest.TestCase
             a = tsa.Array([[20, 20, 20, 18, 25, 19, 20, 20, 20, 20, 40, ...
                 30, 1, 50, 1, 1, 5, 1, 20, 20]', [20, 20, 20, 2, 19, 1, ...
                 20, 20, 20, 1, 15, 1, 30, 1, 1, 18, 4, 1, 20, 20]']);
-            b = tsa.Features.standarDeviation(a);
+            b = tsa.Features.standardDeviation(a);
             expected = [12.363150892875165 9.51367436903324];
             c = b.getData();
             diff = abs(c - expected);
