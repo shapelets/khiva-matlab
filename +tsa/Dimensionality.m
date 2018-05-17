@@ -1,6 +1,6 @@
 classdef Dimensionality < handle
     %% DIMENSIONALITY class
-    % TSA Dimensionality class containing different dimensionality
+    % TSA Dimensionality class containing several dimensionality
     % reduction methods.
     
     % -------------------------------------------------------------------

@@ -1,6 +1,6 @@
 classdef Regularization < handle
     %% REGULARIZATION class
-    % TSA REGULARIZATION class containing different normalization methods.
+    % TSA Regularization class containing different regularization methods.
     
     % -------------------------------------------------------------------
     % Copyright (c) 2018 Grumpy Cat Software S.L.

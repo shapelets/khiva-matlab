@@ -1,6 +1,6 @@
 classdef Features < handle
     %% FEATURES class
-    % TSA Features class containing a series of features that can be
+    % TSA Features class containing a number of features that can be
     % extracted from time series. All the methods operate with instances
     % of the ARRAY class as input and output.
     

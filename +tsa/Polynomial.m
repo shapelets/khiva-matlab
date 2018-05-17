@@ -1,6 +1,6 @@
 classdef Polynomial < handle
     %% POLYNOMIAL class
-    % TSA Normalization class containing different polynomial methods.
+    % TSA Polynomial class containing a number of polynomial methods.
     
     % -------------------------------------------------------------------
     % Copyright (c) 2018 Grumpy Cat Software S.L.

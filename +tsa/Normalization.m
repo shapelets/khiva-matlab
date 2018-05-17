@@ -1,6 +1,6 @@
 classdef Normalization < handle
     %% NORMALIZATION class
-    % TSA Normalization class containing different normalization methods.
+    % TSA Normalization class containing several normalization methods.
     
     % -------------------------------------------------------------------
     % Copyright (c) 2018 Grumpy Cat Software S.L.
