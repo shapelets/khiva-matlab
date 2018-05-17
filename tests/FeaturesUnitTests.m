@@ -10,7 +10,6 @@ classdef FeaturesUnitTests < matlab.unittest.TestCase
     % -------------------------------------------------------------------
     
     properties
-        lib
         delta
         emptyVector
     end
@@ -20,10 +19,6 @@ classdef FeaturesUnitTests < matlab.unittest.TestCase
             p = path;
             testCase.addTeardown(@path,p);
             addpath ..;
-            import tsa.Array.*
-            import tsa.Backend.*
-            import tsa.Library.*
-            testCase.lib = tsa.Library.instance();
             testCase.delta = 1e-6;
             testCase.emptyVector = single([1 2]);
             testCase.emptyVector = testCase.emptyVector(testCase.emptyVector > 2)';

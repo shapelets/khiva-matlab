@@ -19,8 +19,6 @@ classdef RegularizationUnitTests < matlab.unittest.TestCase
             p = path;
             testCase.addTeardown(@path,p);
             addpath ..;
-            import tsa.Array.*
-            testCase.lib = tsa.Library.instance();
             testCase.delta = 1e-6;
         end
     end

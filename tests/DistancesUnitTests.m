@@ -10,7 +10,6 @@ classdef DistancesUnitTests < matlab.unittest.TestCase
     % -------------------------------------------------------------------
     
     properties
-        lib
         delta
     end
     
@@ -19,10 +18,6 @@ classdef DistancesUnitTests < matlab.unittest.TestCase
             p = path;
             testCase.addTeardown(@path,p);
             addpath ..;
-            import tsa.Array.*
-            import tsa.Backend.*
-            import tsa.Library.*
-            testCase.lib = tsa.Library.instance();
             testCase.delta = 1e-6;
         end
     end

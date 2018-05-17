@@ -18,8 +18,6 @@ classdef LibraryUnitTests < matlab.unittest.TestCase
             p = path;
             testCase.addTeardown(@path,p);
             addpath ..;
-            import tsa.Library.*
-            import tsa.Backend.*
             testCase.lib = tsa.Library.instance();
         end
     end

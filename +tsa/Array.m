@@ -20,6 +20,8 @@ classdef Array < handle
         function obj = Array(data)
             %% ARRAY Creates a TSA array
             % Creates a TSA array from a given vector.
+            tsa.Library.instance();
+            
             if isa(data,'lib.pointer')
                 % Creating the Array from an array already present in the
                 % device

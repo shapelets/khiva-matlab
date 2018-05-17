@@ -9,17 +9,11 @@ classdef LinalgUnitTests < matlab.unittest.TestCase
     % file, You can obtain one at http://mozilla.org/MPL/2.0/.
     % -------------------------------------------------------------------
     
-    properties
-        lib
-    end
-    
     methods (TestClassSetup)
         function addLibraryClassToPath(testCase)
             p = path;
             testCase.addTeardown(@path,p);
             addpath ..;
-            import tsa.Array.*
-            testCase.lib = tsa.Library.instance();
         end
     end
     
