@@ -44,6 +44,22 @@ classdef StatisticsUnitTests < matlab.unittest.TestCase
             diff = abs(reshape(c,1,[]) - expected);
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
         end
+        function testKurtosis(testCase)
+            a = tsa.Array([[0, 1, 2, 3, 4, 5]', [2, 2, 2, 20, 30, 25]']);
+            b = tsa.Statistics.kurtosis(a);
+            expected = [-1.2, -2.66226722];
+            c = b.getData();
+            diff = abs(reshape(c,1,[]) - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        function testLjungBox(testCase)
+            a = tsa.Array([[0, 1, 2, 3]', [4, 5, 6, 7]']);
+            b = tsa.Statistics.ljungBox(a, 3);
+            expected = [6.4400, 6.4400];
+            c = b.getData();
+            diff = abs(reshape(c,1,[]) - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
         function testMoment(testCase)
             a = tsa.Array([[0, 1, 2, 3, 4, 5]', [0, 1, 2, 3, 4, 5]']);
             b = tsa.Statistics.moment(a, 2);
@@ -55,30 +71,6 @@ classdef StatisticsUnitTests < matlab.unittest.TestCase
             e = d.getData();
             expected = [163.1666666666, 163.1666666666];
             diff = abs(reshape(e,1,[]) - expected);
-            testCase.verifyLessThanOrEqual(diff, testCase.delta);
-        end
-        function testSampleStdev(testCase)
-            a = tsa.Array([[0, 1, 2, 3, 4, 5]', [2, 2, 2, 20, 30, 25]']);
-            b = tsa.Statistics.sampleStdev(a);
-            expected = [1.870828693, 12.988456413];
-            c = b.getData();
-            diff = abs(reshape(c,1,[]) - expected);
-            testCase.verifyLessThanOrEqual(diff, testCase.delta);
-        end
-        function testKurtosis(testCase)
-            a = tsa.Array([[0, 1, 2, 3, 4, 5]', [2, 2, 2, 20, 30, 25]']);
-            b = tsa.Statistics.kurtosis(a);
-            expected = [-1.2, -2.66226722];
-            c = b.getData();
-            diff = abs(reshape(c,1,[]) - expected);
-            testCase.verifyLessThanOrEqual(diff, testCase.delta);
-        end
-        function testSkewness(testCase)
-            a = tsa.Array([[0, 1, 2, 3, 4, 5]', [2, 2, 2, 20, 30, 25]']);
-            b = tsa.Statistics.skewness(a);
-            expected = [0.0, 0.236177069879499];
-            c = b.getData();
-            diff = abs(reshape(c,1,[]) - expected);
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
         end
         function testQuantile(testCase)
@@ -121,6 +113,23 @@ classdef StatisticsUnitTests < matlab.unittest.TestCase
                         6.714286, 7.4285717, 8.857143, 9.571428, ... 
                         10.285714, 6.714286, 7.4285717, 8.142858, ...
                         9.571428, 10.285714, 11.0];
+            c = b.getData();
+            diff = abs(reshape(c,1,[]) - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        function testSampleStdev(testCase)
+            a = tsa.Array([[0, 1, 2, 3, 4, 5]', [2, 2, 2, 20, 30, 25]']);
+            b = tsa.Statistics.sampleStdev(a);
+            expected = [1.870828693, 12.988456413];
+            c = b.getData();
+            diff = abs(reshape(c,1,[]) - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
+        
+        function testSkewness(testCase)
+            a = tsa.Array([[0, 1, 2, 3, 4, 5]', [2, 2, 2, 20, 30, 25]']);
+            b = tsa.Statistics.skewness(a);
+            expected = [0.0, 0.236177069879499];
             c = b.getData();
             diff = abs(reshape(c,1,[]) - expected);
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
