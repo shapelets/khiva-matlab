@@ -50,18 +50,18 @@ classdef Statistics < handle
             %
             % The test statistic is:
             %
-            % $$Q = n\left(n+2\right)\sum_{k=1}^h\frac{\hat{\rho}^2_k}{n-k} </math>$$
+            % $$Q = n\left(n+2\right)\sum_{k=1}^h\frac{\hat{\rho}^2_k}{n-k}$$
             %
             % where ''n'' is the sample size, $\hat{\rho}k$ is the sample 
             % autocorrelation at lag ''k'', and ''h'' is the number of lags 
             % being tested. Under $H_0`$ the statistic Q follows a
-            % $\chi^2{(h)}$. For significance level $\alpha\$, 
+            % $\chi^2{(h)}$. For significance level $\alpha$, 
             % the $critical region$ for rejection of the hypothesis 
             % of randomness is:
             % 
             % $$Q > \chi_{1-\alpha,h}^2$$
             %
-            % $\chi_{1-\alpha,h}^2$ is the $\alpha\$ -quantile of the  
+            % $\chi_{1-\alpha,h}^2$ is the $\alpha$ -quantile of the  
             % chi-squared distribution with ''h'' degrees of freedom.
             %
             % [1] G. M. Ljung  G. E. P. Box (1978). On a measure of lack 

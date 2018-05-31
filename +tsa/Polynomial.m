@@ -42,7 +42,7 @@ classdef Polynomial < handle
             % of a polynomial. If the length of $p$ is $n+1$ then the
             % polynomial is described by:
             % 
-            %      $$p[0]% x^n + p[1]% x^{n-1} + ... + p[n-1]% x + p[n]$$
+            % $$p[0]*x^n+p[1]*x^{n-1}+...+p[n-1]*x+p[n]$$
             %
             % *p* is an instance of the TSA array class, which points to
             % the polynomial coefficients.
