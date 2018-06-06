@@ -1,9 +1,9 @@
 classdef Dtype < int32
     %% DTYPE
-    % TSA array available types.
+    % Khiva array available types.
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,29 +11,29 @@ classdef Dtype < int32
     % -------------------------------------------------------------------
     enumeration
         f32 (0)
-        % Float. tsa.dtype
+        % Float. khiva.dtype
         c32 (1)
-        % 32 bits Complex. tsa.dtype
+        % 32 bits Complex. khiva.dtype
         f64 (2)
-        % 64 bits Double. tsa.dtype
+        % 64 bits Double. khiva.dtype
         c64 (3)
-        % 64 bits Complex. tsa.dtype
+        % 64 bits Complex. khiva.dtype
         b8 (4)
-        % Boolean. tsa.dtype
+        % Boolean. khiva.dtype
         s32 (5)
-        % 32 bits Int. tsa.dtype
+        % 32 bits Int. khiva.dtype
         u32 (6)
-        % 32 bits Unsigned Int. tsa.dtype
+        % 32 bits Unsigned Int. khiva.dtype
         u8 (7)
-        % 8 bits Unsigned Int. tsa.dtype
+        % 8 bits Unsigned Int. khiva.dtype
         s64 (8)
-        % 64 bits Integer. tsa.dtype
+        % 64 bits Integer. khiva.dtype
         u64 (9)
-        % 64 bits Unsigned Int. tsa.dtype
+        % 64 bits Unsigned Int. khiva.dtype
         s16 (10)
-        % 16 bits Int. tsa.dtype
+        % 16 bits Int. khiva.dtype
         u16 (11)
-        % 16 bits Unsigned int. tsa.dtype
+        % 16 bits Unsigned int. khiva.dtype
     end
     methods(Static)
         function dtype = fromVariableClass(var)
@@ -49,25 +49,25 @@ classdef Dtype < int32
             if isReal
                 switch clazz
                     case 'single'
-                        dtype = tsa.Dtype.f32;
+                        dtype = khiva.Dtype.f32;
                     case 'double'
-                        dtype = tsa.Dtype.f64;
+                        dtype = khiva.Dtype.f64;
                     case 'logical'
-                        dtype = tsa.Dtype.b8;
+                        dtype = khiva.Dtype.b8;
                     case 'int32'
-                        dtype = tsa.Dtype.s32;
+                        dtype = khiva.Dtype.s32;
                     case 'uint32'
-                        dtype = tsa.Dtype.u32;
+                        dtype = khiva.Dtype.u32;
                     case 'uint8'
-                        dtype = tsa.Dtype.u8;
+                        dtype = khiva.Dtype.u8;
                     case 'int64'
-                        dtype = tsa.Dtype.s64;
+                        dtype = khiva.Dtype.s64;
                     case 'uint64'
-                        dtype = tsa.Dtype.u64;
+                        dtype = khiva.Dtype.u64;
                     case 'int16'
-                        dtype = tsa.Dtype.s16;
+                        dtype = khiva.Dtype.s16;
                     case 'uint16'
-                        dtype = tsa.Dtype.u16;
+                        dtype = khiva.Dtype.u16;
                     otherwise
                         fprintf('Error, %s data type not supported.', clazz)
                         exit(-1)
@@ -76,9 +76,9 @@ classdef Dtype < int32
             else
                 switch clazz
                     case 'single'
-                        dtype = tsa.Dtype.c32;
+                        dtype = khiva.Dtype.c32;
                     case 'double'
-                        dtype = tsa.Dtype.c64;
+                        dtype = khiva.Dtype.c64;
                     otherwise
                         fprintf('Error, only complex numbers of single and double precision floating points allowed.')
                         exit(-1)
@@ -89,33 +89,33 @@ classdef Dtype < int32
         function clazz = toClass(dtype)
             %% TOCLASS
             % This function determines the Matlab class of the given
-            % enumerate value of TSA Dtype'.
+            % enumerate value of Khiva Dtype'.
             %
-            % *dtype* Instance of the Dtype enumeratie of TSA.
+            % *dtype* Instance of the Dtype enumeratie of Khiva.
             switch int32(dtype)
-                case int32(tsa.Dtype.f32)
+                case int32(khiva.Dtype.f32)
                     clazz = 'single';
-                case int32(tsa.Dtype.c32)
+                case int32(khiva.Dtype.c32)
                     clazz = 'single';
-                case int32(tsa.Dtype.f64)
+                case int32(khiva.Dtype.f64)
                     clazz = 'double';
-                case int32(tsa.Dtype.c64)
+                case int32(khiva.Dtype.c64)
                     clazz = 'double';
-                case int32(tsa.Dtype.b8)
+                case int32(khiva.Dtype.b8)
                     clazz = 'logical';
-                case int32(tsa.Dtype.s32)
+                case int32(khiva.Dtype.s32)
                     clazz = 'int32';
-                case int32(tsa.Dtype.u32)
+                case int32(khiva.Dtype.u32)
                     clazz = 'uint32';
-                case int32(tsa.Dtype.u8)
+                case int32(khiva.Dtype.u8)
                     clazz = 'uint8';
-                case int32(tsa.Dtype.s64)
+                case int32(khiva.Dtype.s64)
                     clazz = 'int64';
-                case int32(tsa.Dtype.u64)
+                case int32(khiva.Dtype.u64)
                     clazz = 'uint64';
-                case int32(tsa.Dtype.s16)
+                case int32(khiva.Dtype.s16)
                     clazz = 'int16';
-                case int32(tsa.Dtype.u16)
+                case int32(khiva.Dtype.u16)
                     clazz = 'uint16';
                 otherwise
                     fprintf('Error, %s data type not supported.', dtype)

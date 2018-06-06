@@ -1,9 +1,9 @@
 classdef Linalg < handle
     %% LINALG class
-    % TSA Linear Algebra class containing linear algebra methods.
+    % Khiva Linear Algebra class containing linear algebra methods.
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ classdef Linalg < handle
     methods(Static)
         % Commented because this function fails just in Matlab. It is not
         % failing in python, neither in Java. It is failing when using the
-        % lls solver of tsa which uses the svd function of ArrayFire. It
+        % lls solver of khiva which uses the svd function of ArrayFire. It
         % fails exactly at the point where svd is used.
         %function lls = lls(a, b)
         %   %% LLS
@@ -26,14 +26,14 @@ classdef Linalg < handle
         %   % singular values contained in D if they are not zero, and zero
         %   % otherwise.
         %   % 
-        %   % *a* A TSA array pointing to acoefficient matrix containing
+        %   % *a* A Khiva array pointing to acoefficient matrix containing
         %   % the coefficients of the linear equation problem to solve.
         %   %
-        %   % *b* A TSA array pointing to a vector with the measured values.
+        %   % *b* A Khiva array pointing to a vector with the measured values.
         %   result = libpointer('voidPtrPtr');
-        %   [~, ~, result] = calllib('libtsac', 'lls', ...
+        %   [~, ~, result] = calllib('libkhivac', 'lls', ...
         %       a.getReference(), b.getReference(), result);
-        %   lls = tsa.Array(result);
+        %   lls = khiva.Array(result);
         %end
     end
 end

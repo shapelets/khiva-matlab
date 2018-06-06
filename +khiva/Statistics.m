@@ -1,9 +1,9 @@
 classdef Statistics < handle
     %% Statistics class
-    % TSA Statistics class containing statistics methods.
+    % Khiva Statistics class containing statistics methods.
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,29 +15,29 @@ classdef Statistics < handle
             %% COVARIANCE
             % Returns the covariance matrix of the time series contained in tss.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *unbiased* Determines whether it divides by n - 1 (if false)
             % or n (if true).
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'covariance_statistics', ...
+            [~, ~, result] = calllib('libkhivac', 'covariance_statistics', ...
                 array.getReference(), unbiased, result);
-            c = tsa.Array(result);
+            c = khiva.Array(result);
         end
         function k = kurtosis(array)
             %% KURTOSIS
             % Returns the kurtosis of tss (calculated with the adjusted 
             % Fisher-Pearson standarized moment coefficient G2).
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'kurtosis_statistics', ...
+            [~, result] = calllib('libkhivac', 'kurtosis_statistics', ...
                 array.getReference(), result);
-            k = tsa.Array(result);
+            k = khiva.Array(result);
          end
         function ljungBoxOut = ljungBox(tss, lags)
             %% LJUNGBOX
@@ -74,29 +74,29 @@ classdef Statistics < handle
             %
             % *lags* Number of lags being tested.
             ljungBoxOutPtr = libpointer('voidPtrPtr');
-            [~, ~, ljungBoxOutPtr]  = calllib('libtsac', 'ljung_box', ... 
+            [~, ~, ljungBoxOutPtr]  = calllib('libkhivac', 'ljung_box', ... 
                 tss.getReference(), lags, ljungBoxOutPtr);
-            ljungBoxOut = tsa.Array(ljungBoxOutPtr);
+            ljungBoxOut = khiva.Array(ljungBoxOutPtr);
         end
         function m = moment(array, k)
             %% MOMENT
             % Returns the kth moment of the given time series.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *k* The specific moment to be calculated.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'moment_statistics', ...
+            [~, ~, result] = calllib('libkhivac', 'moment_statistics', ...
                 array.getReference(), k, result);
-            m = tsa.Array(result);
+            m = khiva.Array(result);
         end
         function q = quantile(array, qArray, precision)
             %% QUANTILE
             % Returns values at the given quantile.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
@@ -105,16 +105,16 @@ classdef Statistics < handle
             %
             % *precision* Number of decimals expected.
             result = libpointer('voidPtrPtr');
-            [~, ~, ~, result] = calllib('libtsac', 'quantile_statistics', ...
+            [~, ~, ~, result] = calllib('libkhivac', 'quantile_statistics', ...
                 array.getReference(), qArray.getReference(), precision, result);
-            q = tsa.Array(result);
+            q = khiva.Array(result);
         end
         function qc = quantilesCut(array, quantiles, precision)
             %% QUANTILESCUT
             % Discretizes the time series into equal-sized buckets based 
             % on sample quantiles.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
@@ -123,22 +123,22 @@ classdef Statistics < handle
             %
             % *precision* Number of decimals expected.
             result = libpointer('voidPtrPtr');
-            [~, ~, ~, result] = calllib('libtsac', 'quantiles_cut_statistics', ...
+            [~, ~, ~, result] = calllib('libkhivac', 'quantiles_cut_statistics', ...
                 array.getReference(), quantiles, precision, result);
-            qc = tsa.Array(result);
+            qc = khiva.Array(result);
         end
         function ss = sampleStdev(array)
             %% SAMPLESTDEV
             % Estimates standard deviation based on a sample. 
             % The standard deviation is calculated using the "n-1" method.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'sample_stdev_statistics', ...
+            [~, result] = calllib('libkhivac', 'sample_stdev_statistics', ...
                 array.getReference(), result);
-            ss = tsa.Array(result);
+            ss = khiva.Array(result);
         end
          
         function s = skewness(array)
@@ -146,13 +146,13 @@ classdef Statistics < handle
             % Calculates the sample skewness of tss (calculated with the 
             % adjusted Fisher-Pearson standardized moment coefficient G1).
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'skewness_statistics', ...
+            [~, result] = calllib('libkhivac', 'skewness_statistics', ...
                 array.getReference(), result);
-            s = tsa.Array(result);
+            s = khiva.Array(result);
         end
     end
 end

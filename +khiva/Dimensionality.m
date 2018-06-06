@@ -1,10 +1,10 @@
 classdef Dimensionality < handle
     %% DIMENSIONALITY class
-    % TSA Dimensionality class containing several dimensionality
+    % Khiva Dimensionality class containing several dimensionality
     % reduction methods.
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -30,7 +30,7 @@ classdef Dimensionality < handle
             % digitized line or its caricature", The Canadian Cartographer
             % 10(2), 112–122 (1973) doi:10.3138/FM57-6770-U75U-7727
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array contains
             % the x-coordinates and y-coordinates of the input points
             % (x in column 0 and y in column 1).
@@ -39,9 +39,9 @@ classdef Dimensionality < handle
             % a gatekeeper for those time series that may be constant or
             % near constant.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'ramer_douglas_peucker', ...
+            [~, ~, result] = calllib('libkhivac', 'ramer_douglas_peucker', ...
                 array.getReference(), epsilon, result);
-            rdp = tsa.Array(result);
+            rdp = khiva.Array(result);
         end
         
         function v = visvalingam(array, numPoints)
@@ -54,7 +54,7 @@ classdef Dimensionality < handle
             % repeated elimination of points, The Cartographic Journal,
             % 1993.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array contains
             % the x-coordinates and y-coordinates of the input points
             % (x in column 0 and y in column 1).
@@ -62,9 +62,9 @@ classdef Dimensionality < handle
             % *numPoints* Sets the number of points returned after the
             % execution of the method.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'visvalingam', ...
+            [~, ~, result] = calllib('libkhivac', 'visvalingam', ...
                 array.getReference(), numPoints, result);
-            v = tsa.Array(result);
+            v = khiva.Array(result);
         end
         
         function p = paa(array, bins)
@@ -84,15 +84,15 @@ classdef Dimensionality < handle
             % values is the PAA approximation (i.e., transform) of the
             % original time series.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple sets of points (one per column).
             %
             % *bins* Sets the total number of divisions.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'paa', ...
+            [~, ~, result] = calllib('libkhivac', 'paa', ...
                 array.getReference(), bins, result);
-            p = tsa.Array(result);
+            p = khiva.Array(result);
         end
         
         function s = sax(array, alphabetSize)
@@ -115,15 +115,15 @@ classdef Dimensionality < handle
             % Workshop on Research Issues in Data Mining and Knowledge
             % Discovery. San Diego, CA. June 13.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *alphabetSize* Number of element within the alphabet.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'sax', ...
+            [~, ~, result] = calllib('libkhivac', 'sax', ...
                 array.getReference(), alphabetSize, result);
-            s = tsa.Array(result);
+            s = khiva.Array(result);
         end
         
         function p = pip(array, numberIPs)
@@ -135,15 +135,15 @@ classdef Dimensionality < handle
             % time series based on data point importance. Engineering
             % Applications of Artificial Intelligence, 21(2):277-300, 2008.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. The array dimension
             % zero is the length of the time series.
             %
             % *numberIPs* The number of points to be returned.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'pip', ...
+            [~, ~, result] = calllib('libkhivac', 'pip', ...
                 array.getReference(), numberIPs, result);
-            p = tsa.Array(result);
+            p = khiva.Array(result);
         end
         
         function pbu = plaBottomUp(array, maxError)
@@ -156,16 +156,16 @@ classdef Dimensionality < handle
             % Knowledge-Based Intelligent Information and Engineering ... 
             % Systems 4693:1066-1072.
             %
-            % *array* Expects a tsa array containing the set of points to ...
+            % *array* Expects a khiva array containing the set of points to ...
             % be reduced. The first component of the points in the first ...
             % column and the second component of the points in the second ...
             % column.
             %
             % *maxError* The maximum approximation error allowed.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'pla_bottom_up', ...
+            [~, ~, result] = calllib('libkhivac', 'pla_bottom_up', ...
                 array.getReference(), maxError, result);
-            pbu = tsa.Array(result);
+            pbu = khiva.Array(result);
         end
         
         function psw = plaSlidingWindow(array, maxError)
@@ -178,16 +178,16 @@ classdef Dimensionality < handle
             % Knowledge-Based Intelligent Information and Engineering ...
             % Systems 4693:1066-1072.
             %
-            % *array* Expects a tsa array containing the set of points to ...
+            % *array* Expects a khiva array containing the set of points to ...
             % be reduced. The first component of the points in the first ...
             % column and the second component of the points in the second ...
             % column.
             %
             % *maxError* The maximum approximation error allowed.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'pla_sliding_window', ...
+            [~, ~, result] = calllib('libkhivac', 'pla_sliding_window', ...
                 array.getReference(), maxError, result);
-            psw = tsa.Array(result);
+            psw = khiva.Array(result);
         end
     end
 end

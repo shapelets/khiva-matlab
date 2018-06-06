@@ -1,5 +1,5 @@
-# TSA-MATLAB
-This is the TSA binding for connecting the MATLAB programming language and the TSA library.
+# Khiva-MATLAB
+This is the Khiva binding for connecting the MATLAB programming language and the Khiva library.
 
 ## License
 This project is licensed under [MPL-v2](https://www.mozilla.org/en-US/MPL/2.0/).
@@ -7,12 +7,12 @@ This project is licensed under [MPL-v2](https://www.mozilla.org/en-US/MPL/2.0/).
 ## What is this repository for?
 
 * Quick summary:
-This MATLAB package called 'tsa' provides all the functionalities of the TSA library for time series analytics.
+This MATLAB package called 'khiva' provides all the functionalities of the Khiva library for time series analytics.
 * Version:
 0.0.1
 
 ## How do I get set up?
-* Just copy the *+tsa* folder to your project.
+* Just copy the *+khiva* folder to your project.
 
 ## Executing the tests:
 1. Change the MATLAB working directory to the *tests* directory.
@@ -26,18 +26,18 @@ runtests()
 This MATLAB package follows the standard way of writing documentation of MATLAB code.
 
 The documentation can be consulted in 2 ways:
-1. Using `help tsa.<class>.<method>()`
+1. Using `help khiva.<class>.<method>()`
 2. Creating an HTML file that can be visualized in the browser. This generates
    a user-friendlier view of the documentation, especially of the equations.
 ```
-publish('+tsa/Features.m', 'evalCode', false, 'showCode', false)
+publish('+khiva/Features.m', 'evalCode', false, 'showCode', false)
 ```
 
 ## Contributing
 
 ### Branching model
 
-Our branching model has two permanent branches, **develop** and **master**. We aim at using `develop` as the main branch, where all features are merged. In this sense, we use the master branch to push the release versions of the TSA library.
+Our branching model has two permanent branches, **develop** and **master**. We aim at using `develop` as the main branch, where all features are merged. In this sense, we use the master branch to push the release versions of the Khiva library.
 
 ### Contribution process
 
@@ -54,3 +54,8 @@ In order to contribute to the code base, we follow the next process:
 `git checkout develop`
 7. Pull the latest changes.
 `git pull`
+
+## Known issues
+
+### Ubuntu
+When using the Khiva library in Ubuntu with MATLAB 2016a, the `libstdc++` library included in the MATLAB installation folder causes problems while loading our library. Please run MATLAB with the following command: `LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6 /usr/local/MATLAB/R2016a/bin/matlab -desktop`.

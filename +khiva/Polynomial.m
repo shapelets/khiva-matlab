@@ -1,9 +1,9 @@
 classdef Polynomial < handle
     %% POLYNOMIAL class
-    % TSA Polynomial class containing a number of polynomial methods.
+    % Khiva Polynomial class containing a number of polynomial methods.
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -13,7 +13,7 @@ classdef Polynomial < handle
     methods(Static)
         % Commented because this function fails just in Matlab. It is not
         % failing in python, neither in Java. It is failing when using the
-        % lls solver of tsa which uses the svd function of ArrayFire. It
+        % lls solver of khiva which uses the svd function of ArrayFire. It
         % fails exactly at the point where svd is used.
         %function p = polyfit(x, y, deg)
         %    %% POLYFIT
@@ -22,17 +22,17 @@ classdef Polynomial < handle
         %    % points $(x, y)$. Returns a vector of coefficients $p$ that
         %    % minimises the squared error.
         %    %
-        %    % *x* is an instance of the TSA array class, which points to
+        %    % *x* is an instance of the Khiva array class, which points to
         %    % the x-coordinates of the M sample points $(x[i], y[i])$.
         %    %
-        %    % *y* is an instance of the TSA array class, which points to
+        %    % *y* is an instance of the Khiva array class, which points to
         %    % the y-coordinates of the sample points.
         %    %
         %    % *deg* Degree of the fitting polynomial.
         %    result = libpointer('voidPtrPtr');
-        %    [~, ~, ~, result] = calllib('libtsac', 'polyfit', ...
+        %    [~, ~, ~, result] = calllib('libkhivac', 'polyfit', ...
         %        x.getReference(), y.getReference(), deg, result);
-        %    p = tsa.Array(result);
+        %    p = khiva.Array(result);
         %end
         
         function r = roots(p)
@@ -44,12 +44,12 @@ classdef Polynomial < handle
             % 
             % $$p[0]*x^n+p[1]*x^{n-1}+...+p[n-1]*x+p[n]$$
             %
-            % *p* is an instance of the TSA array class, which points to
+            % *p* is an instance of the Khiva array class, which points to
             % the polynomial coefficients.
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'roots', ...
+            [~, result] = calllib('libkhivac', 'roots', ...
                 p.getReference(), result);
-            r = tsa.Array(result);
+            r = khiva.Array(result);
         end
     end
 end

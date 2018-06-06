@@ -2,7 +2,7 @@
 classdef NormalizationUnitTests < matlab.unittest.TestCase
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,8 +25,8 @@ classdef NormalizationUnitTests < matlab.unittest.TestCase
     %% Test Method Block
     methods (Test)
         function testDecimalScalingNorm(testCase)
-           a = tsa.Array(single([[0, 1, -2, 3]', [40, 50, 60, -70]']));
-           b = tsa.Normalization.decimalScalingNorm(a);
+           a = khiva.Array(single([[0, 1, -2, 3]', [40, 50, 60, -70]']));
+           b = khiva.Normalization.decimalScalingNorm(a);
            expected = single([[0.0, 0.1, -0.2, 0.3]', [0.4, 0.5, 0.6, -0.7]']);
            c = b.getData();
            diff = abs(c - expected);
@@ -34,8 +34,8 @@ classdef NormalizationUnitTests < matlab.unittest.TestCase
         end
         
         function testDecimalScalingNormInPlace(testCase)
-           a = tsa.Array(single([[0, 1, -2, 3]', [40, 50, 60, -70]']));
-           tsa.Normalization.decimalScalingNormInPlace(a);
+           a = khiva.Array(single([[0, 1, -2, 3]', [40, 50, 60, -70]']));
+           khiva.Normalization.decimalScalingNormInPlace(a);
            expected = single([[0.0, 0.1, -0.2, 0.3]', [0.4, 0.5, 0.6, -0.7]']);
            b = a.getData();
            diff = abs(b - expected);
@@ -43,8 +43,8 @@ classdef NormalizationUnitTests < matlab.unittest.TestCase
         end
         
         function testMaxMinNorm(testCase)
-           a = tsa.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
-           b = tsa.Normalization.maxMinNorm(a, 2.0, 1.0, 1e-8);
+           a = khiva.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
+           b = khiva.Normalization.maxMinNorm(a, 2.0, 1.0, 1e-8);
            expected = single([[1.0, 1.3333333333333, 1.66666667, 2.0]', ...
                [1.0, 1.3333333333333, 1.66666667, 2.0]']);
            c = b.getData();
@@ -53,8 +53,8 @@ classdef NormalizationUnitTests < matlab.unittest.TestCase
         end
         
         function testMaxMinNormInPlace(testCase)
-           a = tsa.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
-           tsa.Normalization.maxMinNormInPlace(a, 2.0, 1.0, 1e-8);
+           a = khiva.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
+           khiva.Normalization.maxMinNormInPlace(a, 2.0, 1.0, 1e-8);
            expected = single([[1.0, 1.3333333333333, 1.66666667, 2.0]', ...
                [1.0, 1.3333333333333, 1.66666667, 2.0]']);
            b = a.getData();
@@ -63,8 +63,8 @@ classdef NormalizationUnitTests < matlab.unittest.TestCase
         end
         
         function testMeanNorm(testCase)
-           a = tsa.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
-           b = tsa.Normalization.meanNorm(a);
+           a = khiva.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
+           b = khiva.Normalization.meanNorm(a);
            expected = single([[-0.5, -0.166666667, 0.166666667, 0.5]', ... 
                [-0.5, -0.166666667, 0.166666667, 0.5]']);
            c = b.getData();
@@ -73,8 +73,8 @@ classdef NormalizationUnitTests < matlab.unittest.TestCase
         end
         
         function testMeanNormInPlace(testCase)
-           a = tsa.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
-           tsa.Normalization.meanNormInPlace(a);
+           a = khiva.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
+           khiva.Normalization.meanNormInPlace(a);
            expected = single([[-0.5, -0.166666667, 0.166666667, 0.5]', ...
                [-0.5, -0.166666667, 0.166666667, 0.5]']);
            b = a.getData();
@@ -83,8 +83,8 @@ classdef NormalizationUnitTests < matlab.unittest.TestCase
         end
         
         function testZNorm(testCase)
-           a = tsa.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
-           b = tsa.Normalization.zNorm(a, 1e-8);
+           a = khiva.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
+           b = khiva.Normalization.zNorm(a, 1e-8);
            expected = single([[-1.341640786499870, -0.447213595499958, ...
                0.447213595499958, 1.341640786499870]', [-1.341640786499870, ...
                -0.447213595499958, 0.447213595499958, 1.341640786499870]']);
@@ -94,8 +94,8 @@ classdef NormalizationUnitTests < matlab.unittest.TestCase
         end
         
         function testZNormInPlace(testCase)
-           a = tsa.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
-           tsa.Normalization.zNormInPlace(a, 1e-8);
+           a = khiva.Array(single([[0, 1, 2, 3]', [4, 5, 6, 7]']));
+           khiva.Normalization.zNormInPlace(a, 1e-8);
            expected = single([[-1.341640786499870, -0.447213595499958, ...
                0.447213595499958, 1.341640786499870]', [-1.341640786499870, ...
                -0.447213595499958, 0.447213595499958, 1.341640786499870]']);

@@ -2,7 +2,7 @@
 classdef LinalgUnitTests < matlab.unittest.TestCase
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -20,9 +20,9 @@ classdef LinalgUnitTests < matlab.unittest.TestCase
     %% Test Method Block
     methods (Test)
         %function testLls(testCase)
-        %   a = tsa.Array(single([[4 3]', [-1 -2]']));
-        %   b = tsa.Array(single([3 1]'));
-        %   c = tsa.Linalg.lls(a, b);
+        %   a = khiva.Array(single([[4 3]', [-1 -2]']));
+        %   b = khiva.Array(single([3 1]'));
+        %   c = khiva.Linalg.lls(a, b);
         %   expected = single([1 1]);
         %   d = c.getData();
         %   testCase.verifyEqual(d, expected);

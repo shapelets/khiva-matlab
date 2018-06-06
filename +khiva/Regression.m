@@ -1,9 +1,9 @@
 classdef Regression < handle
     %% Distances class
-    % TSA Regression class containing regression methods.
+    % Khiva Regression class containing regression methods.
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -17,10 +17,10 @@ classdef Regression < handle
             % Calculates a linear least-squares regression for two sets of
             % measurements. Both arrays should have the same length.
             %
-            % *xss* is an instance of the TSA array class, which points
+            % *xss* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
-            % *yss* is an instance of the TSA array class, which points
+            % *yss* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             slopeRef = libpointer('voidPtrPtr');
@@ -29,14 +29,14 @@ classdef Regression < handle
             pvalueRef = libpointer('voidPtrPtr');
             stdrrestRef = libpointer('voidPtrPtr');
             [~, ~, slopeRef, interceptRef, rvalueRef, pvalueRef, ...
-                stdrrestRef] = calllib('libtsac', 'linear', ...
+                stdrrestRef] = calllib('libkhivac', 'linear', ...
             xss.getReference(), yss.getReference(), slopeRef, ... 
             interceptRef, rvalueRef, pvalueRef, stdrrestRef);
-            slope = tsa.Array(slopeRef);
-            intercept = tsa.Array(interceptRef);
-            rvalue = tsa.Array(rvalueRef);
-            pvalue = tsa.Array(pvalueRef);
-            stdrrest = tsa.Array(stdrrestRef);
+            slope = khiva.Array(slopeRef);
+            intercept = khiva.Array(interceptRef);
+            rvalue = khiva.Array(rvalueRef);
+            pvalue = khiva.Array(pvalueRef);
+            stdrrest = khiva.Array(stdrrestRef);
         end
     end
 end

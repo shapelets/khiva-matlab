@@ -1,9 +1,9 @@
 classdef Distances < handle
     %% Distances class
-    % TSA Distances class containing distances methods.
+    % Khiva Distances class containing distances methods.
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -15,26 +15,26 @@ classdef Distances < handle
             %% EUCLIDEAN
             % Calculates euclidean distances between time series.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'euclidean', ...
+            [~, result] = calllib('libkhivac', 'euclidean', ...
                 array.getReference(), result);
-            e = tsa.Array(result);
+            e = khiva.Array(result);
         end
         
         function d = dtw(array)
             %% DTW
             % Calculates the Dynamic Time Warping Distance.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'dtw', ...
+            [~, result] = calllib('libkhivac', 'dtw', ...
                 array.getReference(), result);
-            d = tsa.Array(result);
+            d = khiva.Array(result);
         end
         
         function h = hamming(array)
@@ -45,9 +45,9 @@ classdef Distances < handle
             % the length of the time series (all the same) and dimension 
             % one indicates the number of time series.
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'hamming', ...
+            [~, result] = calllib('libkhivac', 'hamming', ...
                 array.getReference(), result);
-            h = tsa.Array(result);
+            h = khiva.Array(result);
         end
         
         function m = manhattan(array)
@@ -58,22 +58,22 @@ classdef Distances < handle
             % the length of the time series (all the same) and dimension 
             % one indicates the number of time series.
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'manhattan', ...
+            [~, result] = calllib('libkhivac', 'manhattan', ...
                 array.getReference(), result);
-            m = tsa.Array(result);
+            m = khiva.Array(result);
         end
         
         function se = squaredEuclidean(array)
             %% SQUAREDEUCLIDEAN
             % Calculates the non squared version of the euclidean distance.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'squared_euclidean', ...
+            [~, result] = calllib('libkhivac', 'squared_euclidean', ...
                 array.getReference(), result);
-            se = tsa.Array(result);
+            se = khiva.Array(result);
         end
     end
 end

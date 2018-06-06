@@ -1,9 +1,9 @@
 classdef Regularization < handle
     %% REGULARIZATION class
-    % TSA Regularization class containing different regularization methods.
+    % Khiva Regularization class containing different regularization methods.
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@ classdef Regularization < handle
             % The data is expected to be sorted. The aggregation function
             % determines the operation to aggregate the values.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
@@ -40,10 +40,10 @@ classdef Regularization < handle
             % *nColumnsValue* Number of columns conforming the value (they
             % are expected to be consecutive to the column keys).
             result = libpointer('voidPtrPtr');
-            [~, ~, ~, ~, result] = calllib('libtsac', 'group_by', ...
+            [~, ~, ~, ~, result] = calllib('libkhivac', 'group_by', ...
                 array.getReference(), aggregationFunction, nColumnsKey, ...
                 nColumnsValue, result);
-            gb = tsa.Array(result);
+            gb = khiva.Array(result);
         end
     end
 end

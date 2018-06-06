@@ -2,7 +2,7 @@
 classdef MatrixUnitTests < matlab.unittest.TestCase
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -25,22 +25,22 @@ classdef MatrixUnitTests < matlab.unittest.TestCase
     %% Test Method Block
     methods (Test)
         function testFindBestNDiscords(testCase)
-           a = tsa.Array(single([11, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11]'));
-           b = tsa.Array(single([9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 9]'));
-           [profile, index] = tsa.Matrix.stomp(a, b, 3);
-           [~, ~, subsequenceIndices] = tsa.Matrix.findBestNDiscords(profile, index, 2);
+           a = khiva.Array(single([11, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11]'));
+           b = khiva.Array(single([9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 9]'));
+           [profile, index] = khiva.Matrix.stomp(a, b, 3);
+           [~, ~, subsequenceIndices] = khiva.Matrix.findBestNDiscords(profile, index, 2);
            expectedIndex = uint32([0 9]');
            indexHost = subsequenceIndices.getData();
            testCase.verifyEqual(indexHost, expectedIndex);
         end
         
         function testFindBestNMotifs(testCase)
-           a = tsa.Array(single([10, 10, 10, 10, 10, 10, 9, 10, 10, 10, ...
+           a = khiva.Array(single([10, 10, 10, 10, 10, 10, 9, 10, 10, 10, ...
                10, 10, 11, 10, 9]'));
-           b = tsa.Array(single([10, 11, 10, 9]'));
-           [profile, index] = tsa.Matrix.stomp(a, b, 3);
+           b = khiva.Array(single([10, 11, 10, 9]'));
+           [profile, index] = khiva.Matrix.stomp(a, b, 3);
            [~, motifsIndices, subsequenceIndices] = ...
-               tsa.Matrix.findBestNMotifs(profile, index, 2);
+               khiva.Matrix.findBestNMotifs(profile, index, 2);
            expectedMotifsIndex = uint32([12 11]');
            expectedSubsequenceIndex = uint32([1 0]');
            motifsIndexHost = motifsIndices.getData();
@@ -50,10 +50,10 @@ classdef MatrixUnitTests < matlab.unittest.TestCase
         end
         
         function testStomp(testCase)
-           a = tsa.Array(single([[10, 11, 10, 11]', [10, 11, 10, 11]']));
-           b = tsa.Array(single([[10, 11, 10, 11, 10, 11, 10, 11]', ...
+           a = khiva.Array(single([[10, 11, 10, 11]', [10, 11, 10, 11]']));
+           b = khiva.Array(single([[10, 11, 10, 11, 10, 11, 10, 11]', ...
                [10, 11, 10, 11, 10, 11, 10, 11]']));
-           [profile, index] = tsa.Matrix.stomp(a, b, 3);
+           [profile, index] = khiva.Matrix.stomp(a, b, 3);
            expectedIndex = zeros([6, 2, 2, 1], 'uint32');
            expectedIndex(:,:,1) = [[0, 1, 0, 1, 0, 1]', [0, 1, 0, 1, 0, 1]'];
            expectedIndex(:,:,2) = [[0, 1, 0, 1, 0, 1]', [0, 1, 0, 1, 0, 1]'];
@@ -66,10 +66,10 @@ classdef MatrixUnitTests < matlab.unittest.TestCase
         end
         
         function testStompSelfJoin(testCase)
-           a = tsa.Array(single([[10, 10, 11, 11, 10, 11, 10, 10, 11, 11, ...
+           a = khiva.Array(single([[10, 10, 11, 11, 10, 11, 10, 10, 11, 11, ...
                10, 11, 10, 10]',[11, 10, 10, 11, 10, 11, 11, 10, 11, 11, ...
                10, 10, 11, 10]']));
-           [profile, index] = tsa.Matrix.stompSelfJoin(a, 3);
+           [profile, index] = khiva.Matrix.stompSelfJoin(a, 3);
            expectedIndex = uint32([[6, 7, 8, 9, 10, 11, 0, 1, 2, 3, 4, 5]', ...
                [9, 10, 11, 6, 7, 8, 3, 4, 5, 0, 1, 2]']);
            expectedProfile = single(expectedIndex * 0.0);

@@ -1,11 +1,11 @@
 classdef Features < handle
     %% FEATURES class
-    % TSA Features class containing a number of features that can be
+    % Khiva Features class containing a number of features that can be
     % extracted from time series. All the methods operate with instances
     % of the ARRAY class as input and output.
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,13 +18,13 @@ classdef Features < handle
             % Calculates the sum over the square values of the
             % time series.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'abs_energy', ...
+            [~, result] = calllib('libkhivac', 'abs_energy', ...
                 array.getReference(), result);
-            ae = tsa.Array(result);
+            ae = khiva.Array(result);
         end
         
         function asoc = absoluteSumOfChanges(array)
@@ -32,13 +32,13 @@ classdef Features < handle
             % Calculates the sum over the absolute value of consecutive
             % changes in the time series.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'absolute_sum_of_changes', ...
+            [~, result] = calllib('libkhivac', 'absolute_sum_of_changes', ...
                 array.getReference(), result);
-            asoc = tsa.Array(result);
+            asoc = khiva.Array(result);
         end
         
         function aauto = aggregatedAutocorrelation(array, aggregationFunction)
@@ -48,7 +48,7 @@ classdef Features < handle
             % (Compare to http://en.wikipedia.org/wiki/Autocorrelation#Estimation),
             % taken over different all possible lags (1 to length of x).
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
@@ -65,9 +65,9 @@ classdef Features < handle
             %         default : mean
             %     }
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'aggregated_autocorrelation', ...
+            [~, ~, result] = calllib('libkhivac', 'aggregated_autocorrelation', ...
                 array.getReference(), aggregationFunction, result);
-            aauto = tsa.Array(result);
+            aauto = khiva.Array(result);
         end
         
         function [slope, intercept, rvalue, pvalue, stdrrest] = ...
@@ -77,7 +77,7 @@ classdef Features < handle
             % the time series that were aggregated over chunks versus the
             % sequence from 0 up to the number of chunks minus one.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
@@ -110,14 +110,14 @@ classdef Features < handle
             pvalueRef = libpointer('voidPtrPtr');
             stdrrestRef = libpointer('voidPtrPtr');
             [~, ~, ~, slopeRef, interceptRef, rvalueRef, pvalueRef, stdrrestRef] ...
-                = calllib('libtsac', 'aggregated_linear_trend', ...
+                = calllib('libkhivac', 'aggregated_linear_trend', ...
                 array.getReference(), chunkSize, aggregationFunction, ...
                 slopeRef, interceptRef, rvalueRef, pvalueRef, stdrrestRef);
-            slope = tsa.Array(slopeRef);
-            intercept = tsa.Array(interceptRef);
-            rvalue = tsa.Array(rvalueRef);
-            pvalue = tsa.Array(pvalueRef);
-            stdrrest = tsa.Array(stdrrestRef);
+            slope = khiva.Array(slopeRef);
+            intercept = khiva.Array(interceptRef);
+            rvalue = khiva.Array(rvalueRef);
+            pvalue = khiva.Array(pvalueRef);
+            stdrrest = khiva.Array(stdrrestRef);
         end
         
         function ae = approximateEntropy(array, m, r)
@@ -132,7 +132,7 @@ classdef Features < handle
             %   Richman & Moorman (2000) - Physiological time-series
             %   analysis using approximate entropy and sample entropy.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
@@ -140,9 +140,9 @@ classdef Features < handle
             % 
             % *r* Filtering level, must be positive.
             result = libpointer('voidPtrPtr');
-            [~, ~, ~, result] = calllib('libtsac', 'approximate_entropy', ...
+            [~, ~, ~, result] = calllib('libkhivac', 'approximate_entropy', ...
                 array.getReference(), m, r, result);
-            ae = tsa.Array(result);
+            ae = khiva.Array(result);
         end
         
         function ac = autoCorrelation(array, maxLag, unbiased)
@@ -150,7 +150,7 @@ classdef Features < handle
             % Calculates the autocorrelation of the specified lag for
             % the given time series.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
@@ -159,25 +159,25 @@ classdef Features < handle
             % *unbiased* Determines whether it divides by n - lag (if
             % true) or n (if false).
             result = libpointer('voidPtrPtr');
-            [~, ~, ~, result] = calllib('libtsac', 'auto_correlation', ...
+            [~, ~, ~, result] = calllib('libkhivac', 'auto_correlation', ...
                 array.getReference(), maxLag, unbiased, result);
-            ac = tsa.Array(result);
+            ac = khiva.Array(result);
         end
         
         function ac = autoCovariance(array, unbiased)
             %% AUTOCOVARIANCE
             % Calculates the auto-covariance of the given time series.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
             % *unbiased* Determines whether it divides by n - lag (if
             % true) or n (if false).
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'auto_covariance', ...
+            [~, ~, result] = calllib('libkhivac', 'auto_covariance', ...
                 array.getReference(), unbiased, result);
-            ac = tsa.Array(result);
+            ac = khiva.Array(result);
         end
         
         function be = binnedEntropy(array, maxBins)
@@ -185,15 +185,15 @@ classdef Features < handle
             % Calculates the binned entropy for the given time series and
             % number of bins.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
             % *maxBins* The number of bins.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'binned_entropy', ...
+            [~, ~, result] = calllib('libkhivac', 'binned_entropy', ...
                 array.getReference(), maxBins, result);
-            be = tsa.Array(result);
+            be = khiva.Array(result);
         end
         
         function c3 = c3(array, lag)
@@ -201,15 +201,15 @@ classdef Features < handle
             % Calculates the Schreiber, T. and Schmitz, A. (1997) measure
             % of non-linearity for the given time series.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
             % *lag* The lag.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'c3', ...
+            [~, ~, result] = calllib('libkhivac', 'c3', ...
                 array.getReference(), lag, result);
-            c3 = tsa.Array(result);
+            c3 = khiva.Array(result);
         end
         
         function cce = cidCe(array, zNormalize)
@@ -218,16 +218,16 @@ classdef Features < handle
             % defined by Batista, Gustavo EAPA, et al (2014). (A more
             % complex time series has more peaks, valleys, etc.).
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
             % *zNormalize* Controls whether the time series should be
             % z-normalized or not.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'cid_ce', ...
+            [~, ~, result] = calllib('libkhivac', 'cid_ce', ...
                 array.getReference(), zNormalize, result);
-            cce = tsa.Array(result);
+            cce = khiva.Array(result);
         end
         
         function cam = countAboveMean(array)
@@ -235,13 +235,13 @@ classdef Features < handle
             % Calculates the number of values in the time series that are
             % higher than the mean.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'count_above_mean', ...
+            [~, result] = calllib('libkhivac', 'count_above_mean', ...
                 array.getReference(), result);
-            cam = tsa.Array(result);
+            cam = khiva.Array(result);
         end
         
         function cbm = countBelowMean(array)
@@ -249,53 +249,53 @@ classdef Features < handle
             % Calculates the number of values in the time series that are
             % lower than the mean.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'count_below_mean', ...
+            [~, result] = calllib('libkhivac', 'count_below_mean', ...
                 array.getReference(), result);
-            cbm = tsa.Array(result);
+            cbm = khiva.Array(result);
         end
         
         function cc = crossCorrelation(xss, yss, unbiased)
             %% CROSSCORRELATION
             % Calculates the cross-correlation of the given time series.
             %
-            % *xss* is an instance of the TSA array class, which points
+            % *xss* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
-            % *yss* is an instance of the TSA array class, which points
+            % *yss* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
             % *unbiased* Determines whether it divides by n - lag (if
             % true) or n (if false).
             result = libpointer('voidPtrPtr');
-            [~, ~, ~, result] = calllib('libtsac', 'cross_correlation', ...
+            [~, ~, ~, result] = calllib('libkhivac', 'cross_correlation', ...
                 xss.getReference(), yss.getReference(), unbiased, result);
-            cc = tsa.Array(result);
+            cc = khiva.Array(result);
         end
         
         function cc = crossCovariance(xss, yss, unbiased)
             %% CROSSCOVARIANCE
             % Calculates the cross-covariance of the given time series.
             %
-            % *xss* is an instance of the TSA array class, which points
+            % *xss* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
-            % *yss* is an instance of the TSA array class, which points
+            % *yss* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *unbiased* Determines whether it divides by n - lag (if
             % true) or n (if false).
             result = libpointer('voidPtrPtr');
-            [~, ~, ~, result] = calllib('libtsac', 'cross_covariance', ...
+            [~, ~, ~, result] = calllib('libkhivac', 'cross_covariance', ...
                 xss.getReference(), yss.getReference(), unbiased, result);
-            cc = tsa.Array(result);
+            cc = khiva.Array(result);
         end
         
         function cwtCoeff = cwtCoefficients(array, width, coeff, w)
@@ -316,7 +316,7 @@ classdef Features < handle
             % the different coefficient for coeff and width w are
             % returned. (For each dic in param one feature is returned).
             %   
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
@@ -326,9 +326,9 @@ classdef Features < handle
             %
             % *w* Width of interest.
             result = libpointer('voidPtrPtr');
-            [~, ~, ~, ~, result] = calllib('libtsac', 'cwt_coefficients', ...
+            [~, ~, ~, ~, result] = calllib('libkhivac', 'cwt_coefficients', ...
                 array.getReference(), width.getReference(), coeff, w, result);
-            cwtCoeff = tsa.Array(result);
+            cwtCoeff = khiva.Array(result);
         end
         
         function erbc = energyRatioByChunks(array, numSegments, segmentFocus)
@@ -338,7 +338,7 @@ classdef Features < handle
             % series. segmentFocus should be lower than the number of
             % segments.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
@@ -348,9 +348,9 @@ classdef Features < handle
             % *segmentFocus* The segment number (starting at zero) to
             % return a feature on.
             result = libpointer('voidPtrPtr');
-            [~, ~, ~, result] = calllib('libtsac', 'energy_ratio_by_chunks', ...
+            [~, ~, ~, result] = calllib('libkhivac', 'energy_ratio_by_chunks', ...
                 array.getReference(), numSegments, segmentFocus, result);
-            erbc = tsa.Array(result);
+            erbc = khiva.Array(result);
         end
         
         function fa = fftAggregated(array)
@@ -358,13 +358,13 @@ classdef Features < handle
             % Calculates the spectral centroid(mean), variance, skew, and
             % kurtosis of the absolute fourier transform spectrum.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'fft_aggregated', ...
+            [~, result] = calllib('libkhivac', 'fft_aggregated', ...
                 array.getReference(), result);
-            fa = tsa.Array(result);
+            fa = khiva.Array(result);
         end
         
         function [real, imag, absolute, angle] = fftCoefficient(array, ...
@@ -374,7 +374,7 @@ classdef Features < handle
             % discrete Fourier Transform for real input by fast fourier
             % transformation algorithm.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
@@ -384,13 +384,13 @@ classdef Features < handle
             absoluteRef = libpointer('voidPtrPtr');
             angleRef = libpointer('voidPtrPtr');
             [~, ~, realRef, imagRef, absoluteRef, angleRef] ...
-                = calllib('libtsac', 'fft_coefficient', ...
+                = calllib('libkhivac', 'fft_coefficient', ...
                 array.getReference(), coefficient, ...
                 realRef, imagRef, absoluteRef, angleRef);
-            real = tsa.Array(realRef);
-            imag = tsa.Array(imagRef);
-            absolute = tsa.Array(absoluteRef);
-            angle = tsa.Array(angleRef);
+            real = khiva.Array(realRef);
+            imag = khiva.Array(imagRef);
+            absolute = khiva.Array(absoluteRef);
+            angle = khiva.Array(angleRef);
         end
         
         function flom = firstLocationOfMaximum(array)
@@ -398,13 +398,13 @@ classdef Features < handle
             % Calculates the first relative location of the maximal value
             % for each time series.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'first_location_of_maximum', ...
+            [~, result] = calllib('libkhivac', 'first_location_of_maximum', ...
                 array.getReference(), result);
-            flom = tsa.Array(result);
+            flom = khiva.Array(result);
         end
         
         function flom = firstLocationOfMinimum(array)
@@ -413,18 +413,18 @@ classdef Features < handle
             % time series. The position is calculated relatively to the
             % length of the series.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'first_location_of_minimum', ...
+            [~, result] = calllib('libkhivac', 'first_location_of_minimum', ...
                 array.getReference(), result);
-            flom = tsa.Array(result);
+            flom = khiva.Array(result);
         end
         
         % Commented because this function fails just in Matlab. It is not
         % failing in python, neither in Java. It is failing when using the
-        % lls solver of tsa which uses the svd function of ArrayFire. It
+        % lls solver of khiva which uses the svd function of ArrayFire. It
         % fails exactly at the point where svd is used.
         %function fc = friedrichCoefficients(array, m, r)
         %    %% FRIEDRICHCOEFFICIENTS
@@ -439,7 +439,7 @@ classdef Features < handle
         %    % [1] Friedrich et al. (2000): Physics Letters A 271, p. 217-222
         %    % Extracting model equations from experimental data.
         %    %
-        %    % *array* is an instance of the TSA array class, which points
+        %    % *array* is an instance of the Khiva array class, which points
         %    % to an array stored in the device side. Such array might
         %    % contain one or multiple time series (one per column).
         %    %
@@ -448,9 +448,9 @@ classdef Features < handle
         %    %
         %    % *r* Number of quantiles to use for averaging.
         %    result = libpointer('voidPtrPtr');
-        %    [~, result] = calllib('libtsac', 'friedrich_coefficients', ...
+        %    [~, result] = calllib('libkhivac', 'friedrich_coefficients', ...
         %        array.getReference(), m, r, result);
-        %    fc = tsa.Array(result);
+        %    fc = khiva.Array(result);
         %end
         
         function hd = hasDuplicates(array)
@@ -458,13 +458,13 @@ classdef Features < handle
             % Calculates if the input time series contain duplicated
             % elements.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'has_duplicates', ...
+            [~, result] = calllib('libkhivac', 'has_duplicates', ...
                 array.getReference(), result);
-            hd = tsa.Array(result);
+            hd = khiva.Array(result);
         end
         
         function hdm = hasDuplicateMax(array)
@@ -472,13 +472,13 @@ classdef Features < handle
             % Calculates if the maximum within input time series is
             % duplicated.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'has_duplicate_max', ...
+            [~, result] = calllib('libkhivac', 'has_duplicate_max', ...
                 array.getReference(), result);
-            hdm = tsa.Array(result);
+            hdm = khiva.Array(result);
         end
         
         function hdm = hasDuplicateMin(array)
@@ -486,28 +486,28 @@ classdef Features < handle
             % Calculates if the maximum within input time series is
             % duplicated.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'has_duplicate_min', ...
+            [~, result] = calllib('libkhivac', 'has_duplicate_min', ...
                 array.getReference(), result);
-            hdm = tsa.Array(result);
+            hdm = khiva.Array(result);
         end
         
         function imq = indexMassQuantile(array, q)
             %% INDEXMASSQUANTILE
             % Calculates the index of the mass quantile.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *q* The quantile.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'index_mass_quantile', ...
+            [~, ~, result] = calllib('libkhivac', 'index_mass_quantile', ...
                 array.getReference(), q, result);
-            imq = tsa.Array(result);
+            imq = khiva.Array(result);
         end
         
         function k = kurtosis(array)
@@ -515,13 +515,13 @@ classdef Features < handle
             % Returns the kurtosis of array (calculated with the adjusted
             % Fisher-Pearson standardized moment coefficient G2).
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'kurtosis', ...
+            [~, result] = calllib('libkhivac', 'kurtosis', ...
                 array.getReference(), result);
-            k = tsa.Array(result);
+            k = khiva.Array(result);
         end
         
         function lstdev = largeStandardDeviation(array, r)
@@ -529,15 +529,15 @@ classdef Features < handle
             % Checks if the time series within array have a large standard
             % deviation.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *r* The threshold.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'large_standard_deviation', ...
+            [~, ~, result] = calllib('libkhivac', 'large_standard_deviation', ...
                 array.getReference(), r, result);
-            lstdev = tsa.Array(result);
+            lstdev = khiva.Array(result);
         end
         
         function llom = lastLocationOfMaximum(array)
@@ -546,13 +546,13 @@ classdef Features < handle
             % time series. The position is calculated relatively to the
             % length of the series.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'last_location_of_maximum', ...
+            [~, result] = calllib('libkhivac', 'last_location_of_maximum', ...
                 array.getReference(), result);
-            llom = tsa.Array(result);
+            llom = khiva.Array(result);
         end
         
         function llom = lastLocationOfMinimum(array)
@@ -561,26 +561,26 @@ classdef Features < handle
             % time series. The position is calculated relatively to the
             % length of the series.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'last_location_of_minimum', ...
+            [~, result] = calllib('libkhivac', 'last_location_of_minimum', ...
                 array.getReference(), result);
-            llom = tsa.Array(result);
+            llom = khiva.Array(result);
         end
         
         function l = length(array)
             %% LENGTH
             % Returns the length of the input time series.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'length', ...
+            [~, result] = calllib('libkhivac', 'length', ...
                 array.getReference(), result);
-            l = tsa.Array(result);
+            l = khiva.Array(result);
         end
         
         function [slope, intercept, rvalue, pvalue, stdrrest] = ...
@@ -590,7 +590,7 @@ classdef Features < handle
             % the time series that were aggregated over chunks versus the
             % sequence from 0 up to the number of chunks minus one.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
@@ -623,27 +623,27 @@ classdef Features < handle
             pvalueRef = libpointer('voidPtrPtr');
             stdrrestRef = libpointer('voidPtrPtr');
             [~, pvalueRef, rvalueRef, interceptRef, slopeRef, stdrrestRef] ...
-                = calllib('libtsac', 'linear_trend', ...
+                = calllib('libkhivac', 'linear_trend', ...
                 array.getReference(), pvalueRef, rvalueRef, ...
                 interceptRef, slopeRef, stdrrestRef);
-            slope = tsa.Array(slopeRef);
-            intercept = tsa.Array(interceptRef);
-            rvalue = tsa.Array(rvalueRef);
-            pvalue = tsa.Array(pvalueRef);
-            stdrrest = tsa.Array(stdrrestRef);
+            slope = khiva.Array(slopeRef);
+            intercept = khiva.Array(interceptRef);
+            rvalue = khiva.Array(rvalueRef);
+            pvalue = khiva.Array(pvalueRef);
+            stdrrest = khiva.Array(stdrrestRef);
         end
         
         function lm = localMaximals(array)
             %% LOCALMAXIMALS
             % Calculates all Local Maximals for the time series in array.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'local_maximals', ...
+            [~, result] = calllib('libkhivac', 'local_maximals', ...
                 array.getReference(), result);
-            lm = tsa.Array(result);
+            lm = khiva.Array(result);
         end
         
         function lsam = longestStrikeAboveMean(array)
@@ -651,13 +651,13 @@ classdef Features < handle
             % Calculates the length of the longest consecutive subsequence
             % in array that is bigger than the mean of array.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'longest_strike_above_mean', ...
+            [~, result] = calllib('libkhivac', 'longest_strike_above_mean', ...
                 array.getReference(), result);
-            lsam = tsa.Array(result);
+            lsam = khiva.Array(result);
         end
         
         function lsbm = longestStrikeBelowMean(array)
@@ -665,18 +665,18 @@ classdef Features < handle
             % Calculates the length of the longest consecutive subsequence
             % in array that is below the mean of array.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'longest_strike_below_mean', ...
+            [~, result] = calllib('libkhivac', 'longest_strike_below_mean', ...
                 array.getReference(), result);
-            lsbm = tsa.Array(result);
+            lsbm = khiva.Array(result);
         end
         
         % Commented because this function fails just in Matlab. It is not
         % failing in python, neither in Java. It is failing when using the
-        % lls solver of tsa which uses the svd function of ArrayFire. It
+        % lls solver of khiva which uses the svd function of ArrayFire. It
         % fails exactly at the point where svd is used.
         %function mlfp = maxLangevinFixedPoint(array, m, r)
         %    %% MAXLANGEVINFIXEDPOINT
@@ -690,7 +690,7 @@ classdef Features < handle
         %    % Friedrich et al. (2000): Physics Letters A 271, p. 217-222
         %    % *Extracting model equations from experimental data.
         %    %
-        %    % *array* is an instance of the TSA array class, which points
+        %    % *array* is an instance of the Khiva array class, which points
         %    % to an array stored in the device side. Such array might
         %    % contain one or multiple time series (one per column).
         %    %
@@ -699,35 +699,35 @@ classdef Features < handle
         %    %
         %    % *r* Number of quantiles to use for averaging.
         %    result = libpointer('voidPtrPtr');
-        %    [~, ~, ~, result] = calllib('libtsac', 'max_langevin_fixed_point', ...
+        %    [~, ~, ~, result] = calllib('libkhivac', 'max_langevin_fixed_point', ...
         %        array.getReference(), m, r, result);
-        %    mlfp = tsa.Array(result);
+        %    mlfp = khiva.Array(result);
         %end
         
         function m = maximum(array)
             %% MAXIMUM
             % Calculates the maximum value for each time series within array.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'maximum', ...
+            [~, result] = calllib('libkhivac', 'maximum', ...
                 array.getReference(), result);
-            m = tsa.Array(result);
+            m = khiva.Array(result);
         end
         
         function m = mean(array)
             %% MEAN
             % Calculates the mean value for each time series within array.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'mean', ...
+            [~, result] = calllib('libkhivac', 'mean', ...
                 array.getReference(), result);
-            m = tsa.Array(result);
+            m = khiva.Array(result);
         end
         
         function mac = meanAbsoluteChange(array)
@@ -735,13 +735,13 @@ classdef Features < handle
             % Calculates the mean over the absolute differences between
             % subsequent time series values in array.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'mean_absolute_change', ...
+            [~, result] = calllib('libkhivac', 'mean_absolute_change', ...
                 array.getReference(), result);
-            mac = tsa.Array(result);
+            mac = khiva.Array(result);
         end
         
         function mc = meanChange(array)
@@ -749,13 +749,13 @@ classdef Features < handle
             % Calculates the mean over the differences between subsequent
             % time series values in array.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'mean_change', ...
+            [~, result] = calllib('libkhivac', 'mean_change', ...
                 array.getReference(), result);
-            mc = tsa.Array(result);
+            mc = khiva.Array(result);
         end
         
         function msdc = meanSecondDerivativeCentral(array)
@@ -763,39 +763,39 @@ classdef Features < handle
             % Calculates mean value of a central approximation of the
             % second derivative for each time series in array.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'mean_second_derivative_central', ...
+            [~, result] = calllib('libkhivac', 'mean_second_derivative_central', ...
                 array.getReference(), result);
-            msdc = tsa.Array(result);
+            msdc = khiva.Array(result);
         end
         
         function m = median(array)
             %% MEDIAN
             % Calculates the median value for each time series within array.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'median', ...
+            [~, result] = calllib('libkhivac', 'median', ...
                 array.getReference(), result);
-            m = tsa.Array(result);
+            m = khiva.Array(result);
         end
         
         function m = minimum(array)
             %% MINIMUM
             % Calculates the minimum value for each time series within array.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'minimum', ...
+            [~, result] = calllib('libkhivac', 'minimum', ...
                 array.getReference(), result);
-            m = tsa.Array(result);
+            m = khiva.Array(result);
         end
         
         function ncm = numberCrossingM(array, m)
@@ -805,15 +805,15 @@ classdef Features < handle
             % $m$ and the next is greater, or viceversa. If you set $m$ to
             % zero, you will get the number of zero crossings.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *m* The m value.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'number_crossing_m', ...
+            [~, ~, result] = calllib('libkhivac', 'number_crossing_m', ...
                 array.getReference(), m, result);
-            ncm = tsa.Array(result);
+            ncm = khiva.Array(result);
         end
         
         function ncp = numberCwtPeaks(array, maxW)
@@ -824,15 +824,15 @@ classdef Features < handle
             % returns the number of peaks that occur at enough width scales
             % and with sufficiently high Signal-to-Noise-Ratio (SNR).
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *maxW* The maximum width to consider.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'number_peaks', ...
+            [~, ~, result] = calllib('libkhivac', 'number_peaks', ...
                 array.getReference(), maxW, result);
-            ncp = tsa.Array(result);
+            ncp = khiva.Array(result);
         end
         
         function np = numberPeaks(array, n)
@@ -842,15 +842,15 @@ classdef Features < handle
             % subsequence of $array$ where a value occurs, which is bigger
             % than its $n$ neighbours to the left and to the right.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *n* The support of the peak.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'number_peaks', ...
+            [~, ~, result] = calllib('libkhivac', 'number_peaks', ...
                 array.getReference(), n, result);
-            np = tsa.Array(result);
+            np = khiva.Array(result);
         end
         
         function pa = partialAutocorrelation(array, lags)
@@ -882,16 +882,16 @@ classdef Features < handle
             % Wiley & Sons.
             %  [2] https://onlinecourses.science.psu.edu/stat510/node/62
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
-            % *lags* is an instance of the TSA array class, which points to
+            % *lags* is an instance of the Khiva array class, which points to
             % the lags to be calculated.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'partial_autocorrelation', ...
+            [~, ~, result] = calllib('libkhivac', 'partial_autocorrelation', ...
                 array.getReference(), lags.getReference(), result);
-            pa = tsa.Array(result);
+            pa = khiva.Array(result);
         end
         
         function pordtad = percentageOfReoccurringDatapointsToAllDatapoints ...
@@ -907,16 +907,16 @@ classdef Features < handle
             % unique values, in contrast to the
             % percentageOfReoccurringValuesToAllValues.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *isSorted* Indicates if the input time series is sorted or not.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', ...
+            [~, ~, result] = calllib('libkhivac', ...
                 'percentage_of_reoccurring_datapoints_to_all_datapoints', ...
                 array.getReference(), isSorted, result);
-            pordtad = tsa.Array(result);
+            pordtad = khiva.Array(result);
         end
         
         function porvtav = percentageOfReoccurringValuesToAllValues ...
@@ -932,23 +932,23 @@ classdef Features < handle
             % unique values, in contrast to the
             % percentageOfReoccurringDatapointsToAllDatapoints.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *isSorted* Indicates if the input time series is sorted or not.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', ...
+            [~, ~, result] = calllib('libkhivac', ...
                 'percentage_of_reoccurring_values_to_all_values', ...
                 array.getReference(), isSorted, result);
-            porvtav = tsa.Array(result);
+            porvtav = khiva.Array(result);
         end
         
         function q = quantile(array, ps, precision)
             %% QUANTILE
             % Returns values at the given quantile.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
@@ -956,16 +956,16 @@ classdef Features < handle
             %
             % *precision* Number of decimals expected.
             result = libpointer('voidPtrPtr');
-            [~, ~, ~, result] = calllib('libtsac', 'quantile', ...
+            [~, ~, ~, result] = calllib('libkhivac', 'quantile', ...
                 array.getReference(), ps.getReference(), precision, result);
-            q = tsa.Array(result);
+            q = khiva.Array(result);
         end
         
         function rc = rangeCount(array, min, max)
             %% RANGECOUNT
             % Counts observed values within the interval [min, max).
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
@@ -973,9 +973,9 @@ classdef Features < handle
             %
             % *max* Value that sets the upper limit.
             result = libpointer('voidPtrPtr');
-            [~, ~, ~, result] = calllib('libtsac', 'range_count', ...
+            [~, ~, ~, result] = calllib('libkhivac', 'range_count', ...
                 array.getReference(), min, max, result);
-            rc = tsa.Array(result);
+            rc = khiva.Array(result);
         end
         
         function rbrs = ratioBeyondRSigma(array, r)
@@ -983,15 +983,15 @@ classdef Features < handle
             % Calculates the ratio of values that are more than
             % $r*std(x)$ (so $r$ sigma) away from the mean of $x$.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *r* Number of times that the values should be away from.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'ratio_beyond_r_sigma', ...
+            [~, ~, result] = calllib('libkhivac', 'ratio_beyond_r_sigma', ...
                 array.getReference(), r, result);
-            rbrs = tsa.Array(result);
+            rbrs = khiva.Array(result);
         end
         
         function rvnttsl = ratioValueNumberToTimeSeriesLength(array)
@@ -1002,13 +1002,13 @@ classdef Features < handle
             %
             %      $$\frac{\textit{number_unique_values}}{\textit{number_values}}$$
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'ratio_value_number_to_time_series_length', ...
+            [~, result] = calllib('libkhivac', 'ratio_value_number_to_time_series_length', ...
                 array.getReference(), result);
-            rvnttsl = tsa.Array(result);
+            rvnttsl = khiva.Array(result);
         end
         
         function se = sampleEntropy(array)
@@ -1025,13 +1025,13 @@ classdef Features < handle
             %   Richman & Moorman (2000) - Physiological time-series
             %   analysis using approximate entropy and sample entropy.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'sample_entropy', ...
+            [~, result] = calllib('libkhivac', 'sample_entropy', ...
                 array.getReference(), result);
-            se = tsa.Array(result);
+            se = khiva.Array(result);
         end
         
         function sk = skewness(array)
@@ -1039,13 +1039,13 @@ classdef Features < handle
             % Calculates the sample skewness of array (calculated with the
             % adjusted Fisher-Pearson standardized moment coefficient G1).
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'skewness', ...
+            [~, result] = calllib('libkhivac', 'skewness', ...
                 array.getReference(), result);
-            sk = tsa.Array(result);
+            sk = khiva.Array(result);
         end
         
         function swd = spktWelchDensity(array, coeff)
@@ -1067,9 +1067,9 @@ classdef Features < handle
             % [3] Rabiner, Lawrence R., and B. Gold. "Theory and Application
             % of Digital Signal Processing" Prentice-Hall, pp. 414-419, 1975.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'spkt_welch_density', ...
+            [~, ~, result] = calllib('libkhivac', 'spkt_welch_density', ...
                 array.getReference(), coeff, result);
-            swd = tsa.Array(result);
+            swd = khiva.Array(result);
         end
         
         function stdev = standardDeviation(array)
@@ -1077,13 +1077,13 @@ classdef Features < handle
             % Calculates the standard deviation of each time series within
             % array.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'standard_deviation', ...
+            [~, result] = calllib('libkhivac', 'standard_deviation', ...
                 array.getReference(), result);
-            stdev = tsa.Array(result);
+            stdev = khiva.Array(result);
         end
         
         function sord = sumOfReoccurringDatapoints(array, isSorted)
@@ -1091,15 +1091,15 @@ classdef Features < handle
             % Calculates the sum of all data points, that are present in
             % the time series more than once.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *isSorted* Indicates if the input time series is sorted or not.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'sum_of_reoccurring_datapoints', ...
+            [~, ~, result] = calllib('libkhivac', 'sum_of_reoccurring_datapoints', ...
                 array.getReference(), isSorted, result);
-            sord = tsa.Array(result);
+            sord = khiva.Array(result);
         end
         
         function sorv = sumOfReoccurringValues(array, isSorted)
@@ -1107,28 +1107,28 @@ classdef Features < handle
             % Calculates the sum of all values, that are present in the
             % time series more than once.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             %
             % *isSorted* Indicates if the input time series is sorted or not.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'sum_of_reoccurring_values', ...
+            [~, ~, result] = calllib('libkhivac', 'sum_of_reoccurring_values', ...
                 array.getReference(), isSorted, result);
-            sorv = tsa.Array(result);
+            sorv = khiva.Array(result);
         end
         
         function sv = sumValues(array)
             %% SUMVALUES
             % Calculates the sum over the time series array.
             %
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'sum_values', ...
+            [~, result] = calllib('libkhivac', 'sum_values', ...
                 array.getReference(), result);
-            sv = tsa.Array(result);
+            sv = khiva.Array(result);
         end
         
         function sl = symmetryLooking(array, r)
@@ -1138,15 +1138,15 @@ classdef Features < handle
             % 
             % $$| mean(array)-median(array)| < r * (max(array)-min(array))$$
             % 
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
             % *r* The percentage of the range to compare with.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'symmetry_looking', ...
+            [~, ~, result] = calllib('libkhivac', 'symmetry_looking', ...
                 array.getReference(), r, result);
-            sl = tsa.Array(result);
+            sl = khiva.Array(result);
         end
         
         function tras = timeReversalAsymmetryStatistic(array, lag)
@@ -1168,43 +1168,43 @@ classdef Features < handle
             % feature-based time-series classification. Knowledge and Data
             % Engineering, IEEE Transactions on 26, 3026–3037.
             % 
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
             % *lag* The lag to be computed.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'time_reversal_asymmetry_statistic', ...
+            [~, ~, result] = calllib('libkhivac', 'time_reversal_asymmetry_statistic', ...
                 array.getReference(), lag, result);
-            tras = tsa.Array(result);
+            tras = khiva.Array(result);
         end
         
         function vc = valueCount(array, v)
             %% VALUECOUNT
             % Counts occurrences of value in the time series array.
             % 
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             % 
             % *v* The value to be counted.
             result = libpointer('voidPtrPtr');
-            [~, ~, result] = calllib('libtsac', 'value_count', ...
+            [~, ~, result] = calllib('libkhivac', 'value_count', ...
                 array.getReference(), v, result);
-            vc = tsa.Array(result);
+            vc = khiva.Array(result);
         end
         
         function v = variance(array)
             %% VARIANCE
             % Computes the variance for the time series array.
             % 
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', 'variance', ...
+            [~, result] = calllib('libkhivac', 'variance', ...
                 array.getReference(), result);
-            v = tsa.Array(result);
+            v = khiva.Array(result);
         end
         
         function v = varianceLargerThanStandardDeviation(array)
@@ -1213,14 +1213,14 @@ classdef Features < handle
             % standard deviation. In other words, if the variance of array
             % is larger than 1.
             % 
-            % *array* is an instance of the TSA array class, which points
+            % *array* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
             % contain one or multiple time series (one per column).
             result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libtsac', ...
+            [~, result] = calllib('libkhivac', ...
                 'variance_larger_than_standard_deviation', ...
                 array.getReference(), result);
-            v = tsa.Array(result);
+            v = khiva.Array(result);
         end
     end
 end

@@ -2,7 +2,7 @@
 classdef LibraryUnitTests < matlab.unittest.TestCase
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -18,7 +18,7 @@ classdef LibraryUnitTests < matlab.unittest.TestCase
             p = path;
             testCase.addTeardown(@path,p);
             addpath ..;
-            testCase.lib = tsa.Library.instance();
+            testCase.lib = khiva.Library.instance();
         end
     end
     
@@ -30,23 +30,23 @@ classdef LibraryUnitTests < matlab.unittest.TestCase
             prevDevice = testCase.lib.getDeviceId();
             
             backends = testCase.lib.getBackends();
-            cuda = bitand(backends,int32(tsa.Backend.TSA_BACKEND_CUDA));
-            cpu = bitand(backends,int32(tsa.Backend.TSA_BACKEND_CPU));
-            opencl = bitand(backends,int32(tsa.Backend.TSA_BACKEND_OPENCL));
+            cuda = bitand(backends,int32(khiva.Backend.KHIVA_BACKEND_CUDA));
+            cpu = bitand(backends,int32(khiva.Backend.KHIVA_BACKEND_CPU));
+            opencl = bitand(backends,int32(khiva.Backend.KHIVA_BACKEND_OPENCL));
             if cuda
-                testCase.lib.setBackend(tsa.Backend.TSA_BACKEND_CUDA);
+                testCase.lib.setBackend(khiva.Backend.KHIVA_BACKEND_CUDA);
                 backend = testCase.lib.getBackend();
-                testCase.verifyEqual(backend, tsa.Backend.TSA_BACKEND_CUDA);
+                testCase.verifyEqual(backend, khiva.Backend.KHIVA_BACKEND_CUDA);
             end
             if cpu
-                testCase.lib.setBackend(tsa.Backend.TSA_BACKEND_CPU);
+                testCase.lib.setBackend(khiva.Backend.KHIVA_BACKEND_CPU);
                 backend = testCase.lib.getBackend();
-                testCase.verifyEqual(backend, tsa.Backend.TSA_BACKEND_CPU);
+                testCase.verifyEqual(backend, khiva.Backend.KHIVA_BACKEND_CPU);
             end
             if opencl
-                testCase.lib.setBackend(tsa.Backend.TSA_BACKEND_OPENCL);
+                testCase.lib.setBackend(khiva.Backend.KHIVA_BACKEND_OPENCL);
                 backend = testCase.lib.getBackend();
-                testCase.verifyEqual(backend, tsa.Backend.TSA_BACKEND_OPENCL);
+                testCase.verifyEqual(backend, khiva.Backend.KHIVA_BACKEND_OPENCL);
             end
             
             % Restoring the previous backend
@@ -60,11 +60,11 @@ classdef LibraryUnitTests < matlab.unittest.TestCase
             prevDevice = testCase.lib.getDeviceId();
             
             backends = testCase.lib.getBackends();
-            cuda = bitand(backends,int32(tsa.Backend.TSA_BACKEND_CUDA));
-            cpu = bitand(backends,int32(tsa.Backend.TSA_BACKEND_CPU));
-            opencl = bitand(backends,int32(tsa.Backend.TSA_BACKEND_OPENCL));
+            cuda = bitand(backends,int32(khiva.Backend.KHIVA_BACKEND_CUDA));
+            cpu = bitand(backends,int32(khiva.Backend.KHIVA_BACKEND_CPU));
+            opencl = bitand(backends,int32(khiva.Backend.KHIVA_BACKEND_OPENCL));
             if cuda
-                testCase.lib.setBackend(tsa.Backend.TSA_BACKEND_CUDA);
+                testCase.lib.setBackend(khiva.Backend.KHIVA_BACKEND_CUDA);
                 for i = 0:testCase.lib.getDeviceCount()-1
                     testCase.lib.setDevice(i);
                     device = testCase.lib.getDeviceId();
@@ -72,7 +72,7 @@ classdef LibraryUnitTests < matlab.unittest.TestCase
                 end
             end
             if cpu
-                testCase.lib.setBackend(tsa.Backend.TSA_BACKEND_CPU);
+                testCase.lib.setBackend(khiva.Backend.KHIVA_BACKEND_CPU);
                 for i = 0:testCase.lib.getDeviceCount()-1
                     testCase.lib.setDevice(i);
                     device = testCase.lib.getDeviceId();
@@ -80,7 +80,7 @@ classdef LibraryUnitTests < matlab.unittest.TestCase
                 end
             end
             if opencl
-                testCase.lib.setBackend(tsa.Backend.TSA_BACKEND_OPENCL);
+                testCase.lib.setBackend(khiva.Backend.KHIVA_BACKEND_OPENCL);
                 for i = 0:testCase.lib.getDeviceCount()-1
                     testCase.lib.setDevice(i);
                     device = testCase.lib.getDeviceId();

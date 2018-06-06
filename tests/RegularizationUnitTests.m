@@ -2,7 +2,7 @@
 classdef RegularizationUnitTests < matlab.unittest.TestCase
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Grumpy Cat Software S.L.
+    % Copyright (c) 2018 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -26,8 +26,8 @@ classdef RegularizationUnitTests < matlab.unittest.TestCase
     %% Test Method Block
     methods (Test)
         function testGroupBySingleColumn(testCase)
-           a = tsa.Array(single([[0, 1, 1, 2, 2, 3]', [0, 3, 3, 1, 1, 2]']));
-           b = tsa.Regularization.groupBy(a, 0, 1, 1);
+           a = khiva.Array(single([[0, 1, 1, 2, 2, 3]', [0, 3, 3, 1, 1, 2]']));
+           b = khiva.Regularization.groupBy(a, 0, 1, 1);
            expected = single([0, 3, 1, 2]');
            c = b.getData();
            diff = abs(c - expected);
@@ -35,9 +35,9 @@ classdef RegularizationUnitTests < matlab.unittest.TestCase
         end
         
         function testGroupByDoubleKeyColumn(testCase)
-           a = tsa.Array(single([[0, 1, 1, 2, 2, 3]', [1, 2, 2, 3, 3, 4]', ...
+           a = khiva.Array(single([[0, 1, 1, 2, 2, 3]', [1, 2, 2, 3, 3, 4]', ...
                [0, 3, 3, 1, 1, 2]']));
-           b = tsa.Regularization.groupBy(a, 0, 2, 1);
+           b = khiva.Regularization.groupBy(a, 0, 2, 1);
            expected = single([0, 3, 1, 2]');
            c = b.getData();
            diff = abs(c - expected);
@@ -45,9 +45,9 @@ classdef RegularizationUnitTests < matlab.unittest.TestCase
         end
         
         function testGroupByDoubleKeyColumn2(testCase)
-           a = tsa.Array(single([[0, 0, 1, 1, 1]', [0, 1, 0, 0, 1]', ...
+           a = khiva.Array(single([[0, 0, 1, 1, 1]', [0, 1, 0, 0, 1]', ...
                [1, 2, 3, 4, 5]']));
-           b = tsa.Regularization.groupBy(a, 0, 2, 1);
+           b = khiva.Regularization.groupBy(a, 0, 2, 1);
            expected = single([1, 2, 3.5, 5]');
            c = b.getData();
            diff = abs(c - expected);
@@ -55,9 +55,9 @@ classdef RegularizationUnitTests < matlab.unittest.TestCase
         end
         
         function testGroupByDoubleKeyDoubleValueColumn(testCase)
-           a = tsa.Array(single([[0, 0, 0, 2, 2]', [2, 2, 2, 4, 4]', ...
+           a = khiva.Array(single([[0, 0, 0, 2, 2]', [2, 2, 2, 4, 4]', ...
                [0, 1, 2, 3, 4]', [1, 1, 1, 1, 1]']));
-           b = tsa.Regularization.groupBy(a, 0, 2, 2);
+           b = khiva.Regularization.groupBy(a, 0, 2, 2);
            expected = single([[1, 3.5]', [1, 1]']);
            c = b.getData();
            diff = abs(c - expected);
