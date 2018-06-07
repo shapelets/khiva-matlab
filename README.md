@@ -9,7 +9,7 @@ This project is licensed under [MPL-v2](https://www.mozilla.org/en-US/MPL/2.0/).
 * Quick summary:
 This MATLAB package called 'khiva' provides all the functionalities of the Khiva library for time series analytics.
 * Version:
-0.0.1
+0.1.0
 
 ## How do I get set up?
 * Just copy the *+khiva* folder to your project.
@@ -45,7 +45,7 @@ In order to contribute to the code base, we follow the next process:
 1. The main branch is develop, every developer should pull the current status of the branch before stating to develop any new feature.
 `git pull`
 2. Create a new branch with the following pattern "feature/[name_of_the_feature]"
-`git checkout -b feature/exampleFeature`
+`git checkout -b feature/example_feature`
 3. Develop the new feature on the the new branch. It includes testing and documentation.
 `git commit -a -m "Bla, Bla, Bla";  git push`
 4. Open a Pull Request to merge the feature branch in to develop. Currently, a pull request has to be reviewed at least by one person.
