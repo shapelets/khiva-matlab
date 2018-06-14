@@ -20,12 +20,12 @@ little bit helps, and credit will always be given.
 
 ## Formatting Style
 
-In order to have a standarised code base, we only accept code that is formatted according to PEP 8.
+In order to have a standarised code base, we only accept code that is formatted according to Matlab Code Style.
 
 ## Branching model
 
 Our branching model has two permanent branches, **develop** and **master**. We aim at using `develop` as the main branch,
-where all features are merged. In this sense, we use the master branch to push the release versions of the Python Khiva library.
+where all features are merged. In this sense, we use the master branch to push the release versions of the Matlab Khiva library.
 
 ## Contribution process
 
@@ -62,22 +62,10 @@ Look through the [GitHub issues](https://github.com/shapelets/khiva-matlab/issue
 
 ### Improve Documentation
 
-Khiva could always use better documentation, whether as part of the official Khiva docs, or even description of the 
-methods in the different namespaces.
+Khiva could always use better documentation in the description of the methods in the different classes.
 
 ### Submit Feedback
 
 The best way to send feedback is to open an issue on [GitHub issues](https://github.com/shapelets/khiva-matlab/issues)
 
 If you are proposing a feature, please follow the feature request template.
-
-## Development and Testing
-
-### Set up a development env using Docker
-
-Start a new docker container.
-
-```
-# Start docker
-docker run --rm -ti shapelets/khiva-matlab
-```
