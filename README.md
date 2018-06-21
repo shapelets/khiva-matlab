@@ -33,7 +33,7 @@ The documentation can be consulted in 2 ways:
 publish('+khiva/Features.m', 'evalCode', false, 'showCode', false)
 ```
 
-### Contributing
+## Contributing
 The rules to contribute to this project are described [here](CONTRIBUTING.md)
 
 ## Known issues
