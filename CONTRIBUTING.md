@@ -23,7 +23,7 @@ In order to have a standarised code base, we only accept code that is formatted 
 
 ## Branching model
 
-Our branching model has one permanent branches, **master**. We aim at using `master` as the main branch, where all features are merged. In this sense, we also use the master branch to contain the release versions of the Khiva library by means of git tags.
+Our branching model has one permanent branch, **master**. We aim at using `master` as the main branch, where all features are merged. In this sense, we also use the master branch to contain the release versions of the Khiva library by means of git tags.
 
 ## Contribution process
 
