@@ -70,10 +70,12 @@ classdef Library < handle
             end
         end
         
-        function info()
-            %% INFO
-            % Get the devices info.
-            calllib('libkhivac','info')
+        function info = backendInfo()
+            %% BACKENDINFO
+            % Gets information from the active backend.
+            info = {blanks(1000)};
+            info = calllib('libkhivac','backend_info', info);
+            info = cell2mat(info);
         end
         
         function backend = getBackend()
