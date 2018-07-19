@@ -25,28 +25,120 @@ classdef MatrixUnitTests < matlab.unittest.TestCase
     %% Test Method Block
     methods (Test)
         function testFindBestNDiscords(testCase)
-           a = khiva.Array(single([11, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 11]'));
-           b = khiva.Array(single([9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 9]'));
+           a = khiva.Array(single([11, 10, 11, 10, 11, 10, 11, 10, 11, ...
+               10, 11, 10, 11]'));
+           b = khiva.Array(single([9, 10.1, 10.2, 10.1, 10.2, 10.1, ...
+               10.2, 10.1, 10.2, 10.1, 10.2, 10.1, 9]'));
            [profile, index] = khiva.Matrix.stomp(a, b, 3);
-           [~, ~, subsequenceIndices] = khiva.Matrix.findBestNDiscords(profile, index, 2);
-           expectedIndex = uint32([0 9]');
+           [~, ~, subsequenceIndices] = khiva.Matrix.findBestNDiscords...
+               (profile, index, 3, 2, false);
+           expectedIndex = uint32([0 10]');
            indexHost = subsequenceIndices.getData();
            testCase.verifyEqual(indexHost, expectedIndex);
         end
+
+        function testFindBestNDiscordsMultipleProfiles(testCase)
+           a = khiva.Array(single([[11, 10, 11, 10, 11, 10, 11, 10, 11, ...
+               10, 11, 10, 11]', [11, 10, 11, 10, 11, 10, 11, 10, 11, ...
+               10, 11, 10, 11]']));
+           b = khiva.Array(single([[9, 10.1, 10.2, 10.1, 10.2, 10.1, ...
+               10.2, 10.1, 10.2, 10.1, 10.2, 10.1, 9]', [9, 10.1, 10.2, ...
+               10.1, 10.2, 10.1, 10.2, 10.1, 10.2, 10.1, 10.2, 10.1, 9]']));
+           [profile, index] = khiva.Matrix.stomp(a, b, 3);
+           [~, ~, subsequenceIndices] = khiva.Matrix.findBestNDiscords...
+               (profile, index, 3, 2, false);
+           expectedIndex(:, :, 1) = uint32([[0, 10]', [0, 10]']);
+           expectedIndex(:, :, 2) = uint32([[0, 10]', [0, 10]']);
+           indexHost = subsequenceIndices.getData();
+           testCase.verifyEqual(indexHost, expectedIndex);
+        end
+
+        function testFindBestNDiscordsMirror(testCase)
+           a = khiva.Array(single([10, 11, 10, 10, 11, 10]'));
+           [profile, index] = khiva.Matrix.stompSelfJoin(a, 3);
+           [~, discordsIndices, subsequenceIndices] = ...
+               khiva.Matrix.findBestNDiscords(profile, index, 3, 1, true);
+           expectedDiscordIndex = uint32(3);
+           expectedSubsequenceIndex = uint32(1);
+           discordIndexHost = discordsIndices.getData();
+           subsequenceIndexHost = subsequenceIndices.getData();
+           testCase.verifyEqual(discordIndexHost, expectedDiscordIndex);
+           testCase.verifyEqual(subsequenceIndexHost, expectedSubsequenceIndex);
+        end
+
+        function testFindBestNDiscordsConsecutive(testCase)
+           a = khiva.Array(single([10, 11, 10, 11, 10, 11, 10, 11, 10, ...
+               11, 10, 11, 10, 9.999, 9.998]'));
+           [profile, index] = khiva.Matrix.stompSelfJoin(a, 3);
+           [~, ~, subsequenceIndices] = ...
+               khiva.Matrix.findBestNDiscords(profile, index, 3, 2, true);
+           expectedSubsequenceIndex = uint32([12, 11]');
+           subsequenceIndexHost = subsequenceIndices.getData();
+           testCase.verifyEqual(subsequenceIndexHost(1), ...
+               expectedSubsequenceIndex(1));
+           testCase.verifyNotEqual(subsequenceIndexHost(2), ...
+               expectedSubsequenceIndex(2));
+        end
         
         function testFindBestNMotifs(testCase)
-           a = khiva.Array(single([10, 10, 10, 10, 10, 10, 9, 10, 10, 10, ...
-               10, 10, 11, 10, 9]'));
+           a = khiva.Array(single([10, 10, 10, 10, 10, 10, 9, 10, 10, ...
+               10, 10, 10, 11, 10, 9]'));
            b = khiva.Array(single([10, 11, 10, 9]'));
            [profile, index] = khiva.Matrix.stomp(a, b, 3);
            [~, motifsIndices, subsequenceIndices] = ...
-               khiva.Matrix.findBestNMotifs(profile, index, 2);
-           expectedMotifsIndex = uint32([12 11]');
-           expectedSubsequenceIndex = uint32([1 0]');
+               khiva.Matrix.findBestNMotifs(profile, index, 3, 1, false);
+           expectedMotifsIndex = uint32(12);
+           expectedSubsequenceIndex = uint32(1);
            motifsIndexHost = motifsIndices.getData();
            subsequenceIndexHost = subsequenceIndices.getData();
            testCase.verifyEqual(motifsIndexHost, expectedMotifsIndex);
            testCase.verifyEqual(subsequenceIndexHost, expectedSubsequenceIndex);
+        end
+        
+        function testFindBestNMotifsMultipleProfiles(testCase)
+           a = khiva.Array(single([[10, 10, 10, 10, 10, 10, 9, 10, 10, ...
+               10, 10, 10, 11, 10, 9]', [10, 10, 10, 10, 10, 10, 9, 10, ...
+               10, 10, 10, 10, 11, 10, 9]']));
+           b = khiva.Array(single([[10, 11, 10, 9]', [10, 11, 10, 9]']));
+           [profile, index] = khiva.Matrix.stomp(a, b, 3);
+           [~, motifsIndices, subsequenceIndices] = ...
+               khiva.Matrix.findBestNMotifs(profile, index, 3, 1, false);
+           expectedMotifsIndex(:, :, 1) = uint32([12, 12]);
+           expectedMotifsIndex(:, :, 2) = uint32([12, 12]);
+           expectedSubsequenceIndex(:, :, 1) = uint32([1, 1]);
+           expectedSubsequenceIndex(:, :, 2) = uint32([1, 1]);
+           motifsIndexHost = motifsIndices.getData();
+           subsequenceIndexHost = subsequenceIndices.getData();
+           testCase.verifyEqual(motifsIndexHost, expectedMotifsIndex);
+           testCase.verifyEqual(subsequenceIndexHost, expectedSubsequenceIndex);
+        end
+        
+        function testFindBestNMotifsMirror(testCase)
+           a = khiva.Array(single([10.1, 11, 10.2, 10.15, 10.775, ...
+               10.1, 11, 10.2]'));
+           [profile, index] = khiva.Matrix.stompSelfJoin(a, 3);
+           [~, discordsIndices, subsequenceIndices] = ...
+               khiva.Matrix.findBestNMotifs(profile, index, 3, 2, true);
+           expectedDiscordIndex = uint32([0, 0]');
+           expectedSubsequenceIndex = uint32([5, 3]');
+           discordIndexHost = discordsIndices.getData();
+           subsequenceIndexHost = subsequenceIndices.getData();
+           testCase.verifyEqual(discordIndexHost, expectedDiscordIndex);
+           testCase.verifyEqual(subsequenceIndexHost, expectedSubsequenceIndex);
+        end
+        
+        function testFindBestNMotifsConsecutive(testCase)
+           a = khiva.Array(single([10.1, 11, 10.1, 10.15, 10.075, 10.1, ...
+               11, 10.1, 10.15]'));
+           [profile, index] = khiva.Matrix.stompSelfJoin(a, 3);
+           [~, discordsIndices, subsequenceIndices] = ...
+               khiva.Matrix.findBestNMotifs(profile, index, 3, 2, true);
+           expectedDiscordIndex = uint32(6);
+           expectedSubsequenceIndex = uint32(3);
+           discordIndexHost = discordsIndices.getData();
+           subsequenceIndexHost = subsequenceIndices.getData();
+           testCase.verifyEqual(discordIndexHost(2), expectedDiscordIndex);
+           testCase.verifyEqual(subsequenceIndexHost(2), expectedSubsequenceIndex);
         end
         
         function testStomp(testCase)

@@ -22,6 +22,22 @@ classdef LibraryUnitTests < matlab.unittest.TestCase
         end
     end
     
+    methods (Static)
+        function version = getKhivaVersionFromFile()            
+            if ispc
+                includePath = 'C:/Program Files/Khiva/v0/include';
+            else
+                includePath = '/usr/local/include';
+            end
+            
+            versionHeader = strcat(includePath, '/khiva/version.h');
+            fileText = fileread(versionHeader);
+            expr = '[0-9]+\.[0-9]+\.[0-9]+';
+            matches = regexp(fileText,expr,'match');
+            version = matches{1};
+        end
+    end
+    
     %% Test Method Block
     methods (Test)
         function testSetBackend(testCase)
@@ -95,7 +111,7 @@ classdef LibraryUnitTests < matlab.unittest.TestCase
         
         function version(testCase)
             v = testCase.lib.version();
-            testCase.verifyEqual(v, '0.0.1');
+            testCase.verifyEqual(v, LibraryUnitTests.getKhivaVersionFromFile());
         end
     end
 end
