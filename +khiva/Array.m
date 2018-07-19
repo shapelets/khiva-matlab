@@ -115,7 +115,7 @@ classdef Array < matlab.mixin.Copyable
         function print(obj)
             %% PRINT
             % Prints the data stored in the Khiva array.
-            obj.arrReference = calllib('libkhivac', 'print', obj.arrReference);
+            obj.arrReference = calllib('libkhivac', 'display', obj.arrReference);
         end
         
         function size = size(obj)
