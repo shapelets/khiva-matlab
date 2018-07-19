@@ -12,7 +12,7 @@ classdef Matrix < handle
     
     methods(Static)
         function [discordsDistances, discordsIndices, subsequenceIndices] = ...
-                findBestNDiscords(profile, index, n)
+                findBestNDiscords(profile, index, m, n, selfJoin)
             %% FINDBESTNDISCORDS
             % This function extracts the best N discords from a previously
             % calculated matrix profile.
@@ -23,7 +23,14 @@ classdef Matrix < handle
             % *index* A Khiva Array pointing to the matrix profile index
             % containing where each minimum occurs.
             %
+            % *m* Subsequence length value used to calculate the input
+            % matrix profile.
+            %
             % *n* Number of discords to extract.
+            %
+            % *selfJoin* Indicates whether the input profile comes from a
+            % self join operation or not. It determines whether the mirror
+            % similar region is included in the output or not.
             %
             % *discordsDistances* A Khiva Array pointing to the distance of
             % the best N discords.
@@ -37,18 +44,19 @@ classdef Matrix < handle
             discordsDistancesRef = libpointer('voidPtrPtr');
             discordsIndicesRef = libpointer('voidPtrPtr');
             subsequenceIndicesRef = libpointer('voidPtrPtr');
-            [~, ~, ~, discordsDistancesRef, discordsIndicesRef, ...
-                subsequenceIndicesRef] = calllib('libkhivac', ...
+            [~, ~, ~, ~, discordsDistancesRef, discordsIndicesRef, ...
+                subsequenceIndicesRef, ~] = calllib('libkhivac', ...
                 'find_best_n_discords', profile.getReference(), ...
-                index.getReference(), n, discordsDistancesRef, ...
-                discordsIndicesRef, subsequenceIndicesRef);
+                index.getReference(), m, n,  ...
+                discordsDistancesRef, discordsIndicesRef, ...
+                subsequenceIndicesRef, selfJoin);
             discordsDistances = khiva.Array(discordsDistancesRef);
             discordsIndices = khiva.Array(discordsIndicesRef);
             subsequenceIndices = khiva.Array(subsequenceIndicesRef);
         end
         
         function [motifsDistances, motifsIndices, subsequenceIndices] = ...
-                findBestNMotifs(profile, index, n)
+                findBestNMotifs(profile, index, m, n, selfJoin)
             %% FINDBESTNMOTIFS
             % This function extracts the best N motifs from a previously
             % calculated matrix profile.
@@ -59,7 +67,14 @@ classdef Matrix < handle
             % *index* A Khiva Array pointing to the matrix profile index
             % containing where each minimum occurs.
             %
+            % *m* Subsequence length value used to calculate the input
+            % matrix profile.
+            %
             % *n* Number of motifs to extract.
+            %
+            % *selfJoin* Indicates whether the input profile comes from a
+            % self join operation or not. It determines whether the mirror
+            % similar region is included in the output or not.
             %
             % *motifsDistances* A Khiva Array pointing to the distance of
             % the best N motifs.
@@ -73,11 +88,12 @@ classdef Matrix < handle
             motifsDistancesRef = libpointer('voidPtrPtr');
             motifsIndicesRef = libpointer('voidPtrPtr');
             subsequenceIndicesRef = libpointer('voidPtrPtr');
-            [~, ~, ~, motifsDistancesRef, motifsIndicesRef, ...
-                subsequenceIndicesRef] = calllib('libkhivac', ...
+            [~, ~, ~, ~, motifsDistancesRef, motifsIndicesRef, ...
+                subsequenceIndicesRef, ~] = calllib('libkhivac', ...
                 'find_best_n_motifs', profile.getReference(), ...
-                index.getReference(), n, motifsDistancesRef, ...
-                motifsIndicesRef, subsequenceIndicesRef);
+                index.getReference(), m, n, ...
+                motifsDistancesRef, motifsIndicesRef, ...
+                subsequenceIndicesRef, selfJoin);
             motifsDistances = khiva.Array(motifsDistancesRef);
             motifsIndices = khiva.Array(motifsIndicesRef);
             subsequenceIndices = khiva.Array(subsequenceIndicesRef);
@@ -113,7 +129,7 @@ classdef Matrix < handle
         end
         
         function [profile, index] = stompSelfJoin(tss, m)
-            %% STOMP
+            %% STOMPSELFJOIN
             % STOMP algorithm to calculate the matrix profile between *tss*
             % and itself using a subsequence length of 'm'. This method
             % filters the trivial matches.
