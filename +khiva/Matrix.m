@@ -1,7 +1,7 @@
 classdef Matrix < handle
     %% MATRIX class
     % Khiva Matrix Profile class containing matrix profile methods.
-    
+
     % -------------------------------------------------------------------
     % Copyright (c) 2018 Shapelets.io
     %
@@ -9,7 +9,7 @@ classdef Matrix < handle
     % License, v. 2.0. If a copy of the MPL was not distributed with this
     % file, You can obtain one at http://mozilla.org/MPL/2.0/.
     % -------------------------------------------------------------------
-    
+
     methods(Static)
         function [discordsDistances, discordsIndices, subsequenceIndices] = ...
                 findBestNDiscords(profile, index, m, n, selfJoin)
@@ -34,7 +34,7 @@ classdef Matrix < handle
             %
             % *discordsDistances* A Khiva Array pointing to the distance of
             % the best N discords.
-            % 
+            %
             % *discordsIndices* A Khiva Array pointing to the indices of the
             % best N discords.
             %
@@ -54,7 +54,7 @@ classdef Matrix < handle
             discordsIndices = khiva.Array(discordsIndicesRef);
             subsequenceIndices = khiva.Array(subsequenceIndicesRef);
         end
-        
+
         function [motifsDistances, motifsIndices, subsequenceIndices] = ...
                 findBestNMotifs(profile, index, m, n, selfJoin)
             %% FINDBESTNMOTIFS
@@ -78,7 +78,7 @@ classdef Matrix < handle
             %
             % *motifsDistances* A Khiva Array pointing to the distance of
             % the best N motifs.
-            % 
+            %
             % *motifsIndices* A Khiva Array pointing to the indices of the
             % best N motifs.
             %
@@ -98,11 +98,18 @@ classdef Matrix < handle
             motifsIndices = khiva.Array(motifsIndicesRef);
             subsequenceIndices = khiva.Array(subsequenceIndicesRef);
         end
-        
+
         function [profile, index] = stomp(tssa, tssb, m)
             %% STOMP
             % STOMP algorithm to calculate the matrix profile between *tssa*
             % and *tssb* using a subsequence length of *m*.
+            %
+            % [1] Yan Zhu, Zachary Zimmerman, Nader Shakibay Senobari,
+            % Chin-Chia Michael Yeh, Gareth Funning, Abdullah Mueen,
+            % Philip Brisk and Eamonn Keogh (2016). Matrix Profile II:
+            % Exploiting a Novel Algorithm and GPUs to break
+            % the one Hundred Million Barrier for Time Series Motifs and Joins.
+            % IEEE ICDM 2016.
             %
             % *tssa* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
@@ -127,12 +134,19 @@ classdef Matrix < handle
             profile = khiva.Array(profileRef);
             index = khiva.Array(indexRef);
         end
-        
+
         function [profile, index] = stompSelfJoin(tss, m)
             %% STOMPSELFJOIN
             % STOMP algorithm to calculate the matrix profile between *tss*
             % and itself using a subsequence length of 'm'. This method
             % filters the trivial matches.
+            %
+            % [1] Yan Zhu, Zachary Zimmerman, Nader Shakibay Senobari,
+            % Chin-Chia Michael Yeh, Gareth Funning, Abdullah Mueen,
+            % Philip Brisk and Eamonn Keogh (2016). Matrix Profile II:
+            % Exploiting a Novel Algorithm and GPUs to break
+            % the one Hundred Million Barrier for Time Series Motifs and Joins.
+            % IEEE ICDM 2016.
             %
             % *tss* is an instance of the Khiva array class, which points
             % to an array stored in the device side. Such array might
