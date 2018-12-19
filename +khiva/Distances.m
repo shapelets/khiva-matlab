@@ -11,19 +11,6 @@ classdef Distances < handle
     % -------------------------------------------------------------------
     
     methods(Static)
-        function e = euclidean(array)
-            %% EUCLIDEAN
-            % Calculates euclidean distances between time series.
-            %
-            % *array* is an instance of the Khiva array class, which points
-            % to an array stored in the device side. Such array might
-            % contain one or multiple time series (one per column).
-            result = libpointer('voidPtrPtr');
-            [~, result] = calllib('libkhivac', 'euclidean', ...
-                array.getReference(), result);
-            e = khiva.Array(result);
-        end
-        
         function d = dtw(array)
             %% DTW
             % Calculates the Dynamic Time Warping Distance.
@@ -35,6 +22,19 @@ classdef Distances < handle
             [~, result] = calllib('libkhivac', 'dtw', ...
                 array.getReference(), result);
             d = khiva.Array(result);
+        end
+
+        function e = euclidean(array)
+            %% EUCLIDEAN
+            % Calculates euclidean distances between time series.
+            %
+            % *array* is an instance of the Khiva array class, which points
+            % to an array stored in the device side. Such array might
+            % contain one or multiple time series (one per column).
+            result = libpointer('voidPtrPtr');
+            [~, result] = calllib('libkhivac', 'euclidean', ...
+                array.getReference(), result);
+            e = khiva.Array(result);
         end
         
         function h = hamming(array)
@@ -59,6 +59,22 @@ classdef Distances < handle
             % one indicates the number of time series.
             result = libpointer('voidPtrPtr');
             [~, result] = calllib('libkhivac', 'manhattan', ...
+                array.getReference(), result);
+            m = khiva.Array(result);
+        end
+
+        function m = sbd(array)
+            %% SBD
+            % Calculates the Shape-Based distance (SBD). 
+            % It computes the normalized cross-correlation and it returns
+            % 1.0 minus the value that maximizes the correlation value 
+            % between each pair of time series.
+            %
+            % *array* Expects an input array whose dimension zero is 
+            % the length of the time series (all the same) and dimension 
+            % one indicates the number of time series.
+            result = libpointer('voidPtrPtr');
+            [~, result] = calllib('libkhivac', 'sbd', ...
                 array.getReference(), result);
             m = khiva.Array(result);
         end

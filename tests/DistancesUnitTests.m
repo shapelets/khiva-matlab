@@ -68,6 +68,15 @@ classdef DistancesUnitTests < matlab.unittest.TestCase
             diff = abs(c - expected);
             testCase.verifyLessThanOrEqual(diff, testCase.delta);
         end
+
+        function testSBD(testCase)
+            a = khiva.Array([[1, 2, 3, 4, 5]',[ 1, 1, 0, 1, 1]', [10, 12, 0, 0, 1]']);
+            b = khiva.Distances.sbd(a);
+            expected = [0, 0, 0, 0.505025, 0, 0, 0.458583, 0.564093, 0];
+            c = b.getData();
+            diff = abs(reshape(c,1,[]) - expected);
+            testCase.verifyLessThanOrEqual(diff, testCase.delta);
+        end
                 
         function testSquaredEuclidean(testCase)
             a = khiva.Array([[0, 1, 2, 3]',[ 4, 5, 6, 7]', [8, 9, 10, 11]']);
