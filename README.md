@@ -9,7 +9,7 @@ This project is licensed under [MPL-v2](https://www.mozilla.org/en-US/MPL/2.0/).
 * Quick summary:
 This MATLAB package called 'khiva' provides all the functionalities of the Khiva library for time series analytics.
 * Version:
-0.1.0
+0.2.0
 
 ## How do I get set up?
 * Just copy the *+khiva* folder to your project.
