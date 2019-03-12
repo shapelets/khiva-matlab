@@ -3,7 +3,7 @@ classdef Backend < int32
     % Enumeration that indicates the backend to be used.
     
     % -------------------------------------------------------------------
-    % Copyright (c) 2018 Shapelets.io
+    % Copyright (c) 2019 Shapelets.io
     %
     % This Source Code Form is subject to the terms of the Mozilla Public
     % License, v. 2.0. If a copy of the MPL was not distributed with this
