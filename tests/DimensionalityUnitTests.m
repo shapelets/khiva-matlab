@@ -38,7 +38,7 @@ classdef DimensionalityUnitTests < matlab.unittest.TestCase
            a = khiva.Array(single([[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]', ...
                [0, 0.1, -0.1, 5.0, 6.0, 7.0, 8.1, 9.0, 9.0, 9.0]']));
            b = khiva.Dimensionality.visvalingam(a, 5);
-           expected = single([[0, 2, 5, 7, 9]', [0, -0.1, 7.0, 9.0, 9.0]']);
+           expected = single([[0, 2, 3, 7, 9]', [0, -0.1, 5.0, 9.0, 9.0]']);
            c = b.getData();
            diff = abs(c - expected);
            testCase.verifyLessThanOrEqual(diff, testCase.delta);
@@ -57,10 +57,11 @@ classdef DimensionalityUnitTests < matlab.unittest.TestCase
         end
         
         function testSax(testCase)
-           a = khiva.Array(single([[0.05, 2.45, 6.5, 8.55, 9.0]', ...
-               [0.05, 2.45, 6.5, 8.55, 9.0]']));
+           a = khiva.Array(single([[0.0, 0.1, -0.1, 5.0, 6.0]', ...
+               [7.0, 8.1, 9.0, 9.0, 9.0]']));
            b = khiva.Dimensionality.sax(a, 3);
-           expected = int32([[0, 0, 1, 2, 2]', [0, 0, 1, 2, 2]']);
+           expected = [[0.0, 0.1, -0.1, 5.0, 6.0]', ...
+               [0.0, 1.0, 2.0, 2.0, 2.0]'];
            c = b.getData();
            diff = abs(c - expected);
            testCase.verifyLessThanOrEqual(diff, testCase.delta);
