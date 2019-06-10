@@ -167,5 +167,75 @@ classdef Matrix < handle
             profile = khiva.Array(profileRef);
             index = khiva.Array(indexRef);
         end
+        
+        function distances = mass(query, tss)
+            % Mueen's Algorithm for Similarity Search.
+            % 
+            % The result has the following structure:
+            % - 1st dimension corresponds to the index of the subsequence in
+            %   the time series.
+            % - 2nd dimension corresponds to the number of queries.
+            % - 3rd dimension corresponds to the number of time series.
+            % 
+            % For example, the distance in the position (1, 2, 3) correspond
+            % to the distance of the third query to the fourth time series 
+            % for the second subsequence in the time series.
+            % 
+            % [1] Yan Zhu, Zachary Zimmerman, Nader Shakibay Senobari,
+            % Chin-Chia Michael Yeh, Gareth Funning, Abdullah Mueen,
+            % Philip Brisk and Eamonn Keogh (2016). Matrix Profile II:
+            % Exploiting a Novel Algorithm and GPUs to break
+            % the one Hundred Million Barrier for Time Series Motifs and Joins.
+            % IEEE ICDM 2016.
+            %
+            % *query* KHIVA Array whose first dimension is the length of the
+            % query time series and the second dimension is the number of
+            % queries.
+            % 
+            % *tss*   KHIVA Array whose first dimension is the length of the
+            % time series and the second dimension is the number of time
+            % series.
+            %
+            % *distances* KHIVA Array with the distances.
+            distancesRef = libpointer('voidPtrPtr');
+            [~, ~, distancesRef] = calllib('libkhivac', ...
+                'mass', query.getReference(), tss.getReference(), ...
+                distancesRef);
+            distances = khiva.Array(distancesRef);
+        end
+        
+        function [distances, indexes] = findBestNOccurrences(query, tss, n)
+            % Calculates the N best matches of several queries in several time series.
+            %
+            % The result has the following structure:
+            % - 1st dimension corresponds to the nth best match.
+            % - 2nd dimension corresponds to the number of queries.
+            % - 3rd dimension corresponds to the number of time series.
+            %
+            % For example, the distance in the position (1, 2, 3) corresponds to the
+            % second best distance of the third query in the fourth time series.
+            % The index in the position (1, 2, 3) is the is the index of the
+            % subsequence which leads to the second best distance of the third query
+            % in the fourth time series.
+            %
+            % *query* KHIVA Array whose first dimension is the length of the query
+            % time series and the second dimension is the number of queries.
+            %
+            % *tss*   KHIVA Array whose first dimension is the length of the time
+            % series and the second dimension is the number of time series.
+            %
+            % *n*     Number of matches to return.
+            %
+            % *distances*  KHIVA Arrays with the distances.
+            %
+            % *indexes*  KHIVA Arrays with the indexes.            
+            distancesRef = libpointer('voidPtrPtr');
+            indexesRef = libpointer('voidPtrPtr');
+            [~, ~, ~, distancesRef, indexesRef] = calllib('libkhivac', ...
+                'find_best_n_occurrences', query.getReference(), ...
+                tss.getReference(), n, distancesRef, indexesRef);
+            distances = khiva.Array(distancesRef);
+            indexes = khiva.Array(indexesRef);
+        end
     end
 end
