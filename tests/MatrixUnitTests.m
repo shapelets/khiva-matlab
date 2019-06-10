@@ -153,7 +153,7 @@ classdef MatrixUnitTests < matlab.unittest.TestCase
            profileHost = profile.getData();
            indexHost = index.getData();
            diffProfile = abs(profileHost - expectedProfile);
-           testCase.verifyLessThanOrEqual(diffProfile, 1e-2);
+           testCase.verifyLessThanOrEqual(diffProfile, 2e-2);
            testCase.verifyEqual(indexHost, expectedIndex);
         end
         
@@ -168,8 +168,59 @@ classdef MatrixUnitTests < matlab.unittest.TestCase
            profileHost = profile.getData();
            indexHost = index.getData();
            diffProfile = abs(profileHost - expectedProfile);
-           testCase.verifyLessThanOrEqual(diffProfile, 1e-2);
+           testCase.verifyLessThanOrEqual(diffProfile, 2e-2);
            testCase.verifyEqual(indexHost, expectedIndex);
         end
+        
+        function testMass(testCase)
+            q = khiva.Array(single([4, 3, 8]'));
+            t = khiva.Array(single([10, 10, 10, 11, 12, 11, 10, 10, 11, 12, 11, 14, 10, 10]'));
+            distancesArray = khiva.Matrix.mass(q, t);
+            distances = distancesArray.getData();
+            expected = [1.732051, 0.328954, 1.210135, 3.150851, 3.245858, 2.822044, ... 
+                        0.328954, 1.210135, 3.150851, 0.248097, 3.30187, 2.82205]';
+            diffDistances = abs(distances - expected);
+            testCase.verifyLessThanOrEqual(diffDistances, 1e-3);
+        end
+        
+        function testMassMultiple(testCase)
+            q = khiva.Array(single([[10, 10, 11, 11]', [10, 11, 10, 10]']));
+            t = khiva.Array(single([[10, 10, 10, 11, 12, 11, 10]',...
+                                    [10, 11, 12, 11, 14, 10, 10]']));
+            distancesArray = khiva.Matrix.mass(q, t);
+            distances = distancesArray.getData();
+            expected = zeros([4, 2, 2]);
+            expected(:, :, 1) = [[1.83880341, 0.87391543, 1.5307337, 3.69551826]', ...
+                                 [3.26598597, 3.48967957, 2.82842779, 1.21162188]'];
+            expected(:, :, 2) = [[1.5307337, 2.17577887, 2.57832384, 3.75498915]', ...
+                                 [2.82842779, 2.82842731, 3.21592307, 0.50202721]'];
+            
+            diffDistances = abs(distances - expected);
+            testCase.verifyLessThanOrEqual(diffDistances, 1e-4);
+        end
+        
+        function testFindBestNOccurrences(testCase)
+            q = khiva.Array(single([10, 11, 12]'));
+            t = khiva.Array(single([[10, 10, 11, 11, 12, 11, 10, 10, 11, 12, 11, 10, 10, 11]',...
+                                    [10, 10, 11, 11, 12, 11, 10, 10, 11, 12, 11, 10, 10, 11]']));
+            [distancesArray, indexesArray]= khiva.Matrix.findBestNOccurrences(q, t, 1);
+            distances = distancesArray.getData();
+            indexes = indexesArray.getData();
+            
+            testCase.verifyLessThanOrEqual(distances(1), 1e-2);
+            testCase.verifyLessThanOrEqual(abs(indexes(1) - 7), 1e-4);
+        end
+        
+        function testFindBestNOccurrencesMultipleQueries(testCase)
+            q = khiva.Array(single([[11, 11, 10, 11]', [10, 11, 11, 12]']));
+            t = khiva.Array(single([[10, 10, 11, 11, 10, 11, 10, 10, 11, 11, 10, 11, 10, 10]', ...
+                                    [11, 10, 10, 11, 10, 11, 11, 10, 11, 11, 14, 10, 11, 10]']));
+            [distancesArray, indexesArray]= khiva.Matrix.findBestNOccurrences(q, t, 4);
+            distances = distancesArray.getData();
+            indexes = indexesArray.getData();
+            
+            testCase.verifyLessThanOrEqual(abs(distances(3,1,2) - 1.83880329), 1e-4);
+            testCase.verifyLessThanOrEqual(abs(indexes(4, 2, 1) - 2), 1e-4);
+        end        
     end
 end
